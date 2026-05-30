@@ -197,21 +197,42 @@
         <div class="info-row"><span class="info-key">Fecha de llegada</span><span class="rv" id="v-arrivalDate">—</span></div>
         <div class="info-row"><span class="info-key">Fecha de salida</span><span class="rv" id="v-departDate">—</span></div>
         <div class="info-row"><span class="info-key">Noches / Días</span><span class="rv" id="v-duration">—</span></div>
-        <div class="info-row"><span class="info-key">Hotel Disney</span><span class="rv" id="v-hotelName">—</span></div>
-        <div class="info-row"><span class="info-key">Categoría del resort</span><span class="rv" id="v-resortCategory">—</span></div>
-        <div class="info-row"><span class="info-key">Tipo de habitación</span><span class="rv" id="v-roomType">—</span></div>
+        <div class="info-row"><span class="info-key">Resort(s)</span><span style="font-size:0.75rem;color:var(--muted);font-style:italic;">Ver opciones abajo</span></div>
       </div>
     </div>
 
     <div class="section-header"><div class="section-dot"></div><h3>Detalle del Paquete</h3></div>
     <div class="package-grid">
-      <div class="pkg-card core">
-        <span class="pkg-badge badge-included">✓ Incluido</span>
-        <div class="pkg-icon">🏨</div>
-        <div class="pkg-name">Hospedaje en Resort Disney</div>
-        <div class="pkg-desc">Hotel oficial de Disney según categoría seleccionada. Incluye todas las noches cotizadas.</div>
-        <div class="pkg-price-label">Precio total del paquete</div>
-        <div class="pkg-price-val" id="v-priceHotel">$ —</div>
+      <div style="grid-column:1/-1;">
+        <div style="background:var(--soft);border:2px solid var(--sky);border-radius:16px;padding:1.4rem;margin-bottom:0.5rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--deep-blue);margin-bottom:1rem;">🏨 Opciones de Resort Disney — elige tu favorita</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+            <div class="pkg-card core" style="position:relative;">
+              <span class="pkg-badge badge-included">Opción 1</span>
+              <div class="pkg-icon">🏨</div>
+              <div class="pkg-name" id="v-hotelName">—</div>
+              <div class="pkg-desc">
+                <div id="v-resortCategory"></div>
+                <div id="v-roomType"></div>
+                <div style="font-size:0.72rem;color:var(--muted);" id="v-hotelAddress"></div>
+              </div>
+              <div class="pkg-price-label" style="margin-top:0.8rem;">Precio total</div>
+              <div class="pkg-price-val" id="v-priceHotel">$ —</div>
+            </div>
+            <div class="pkg-card optional" id="card-hotel2" style="position:relative;display:none;">
+              <span class="pkg-badge badge-optional">Opción 2</span>
+              <div class="pkg-icon">🏨</div>
+              <div class="pkg-name" id="v-hotelName2">—</div>
+              <div class="pkg-desc">
+                <div id="v-resortCategory2"></div>
+                <div id="v-roomType2"></div>
+                <div style="font-size:0.72rem;color:var(--muted);" id="v-hotelAddress2"></div>
+              </div>
+              <div class="pkg-price-label" style="margin-top:0.8rem;">Precio total</div>
+              <div class="pkg-price-val" id="v-priceHotel2">$ —</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="pkg-card core">
         <span class="pkg-badge badge-included">✓ Incluido</span>

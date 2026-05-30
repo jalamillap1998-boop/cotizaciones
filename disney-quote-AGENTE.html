@@ -274,15 +274,59 @@
     </div>
 
     <div class="section-header"><div class="section-dot"></div><h3>Detalle del Paquete</h3></div>
-    <div class="package-grid">
-      <div class="pkg-card core">
-        <span class="pkg-badge badge-included">✓ Incluido</span>
-        <div class="pkg-icon">🏨</div>
-        <div class="pkg-name">Hospedaje en Resort Disney</div>
-        <div class="pkg-desc">Hotel oficial de Disney según categoría seleccionada. Incluye todas las noches cotizadas.</div>
-        <div class="pkg-price-label">Precio total del paquete</div>
-        <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceHotel" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+
+    <!-- HOTEL OPTIONS -->
+    <div style="background:var(--soft);border:2px solid var(--sky);border-radius:16px;padding:1.4rem;margin-bottom:1.2rem;">
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--deep-blue);margin-bottom:1rem;">🏨 Opciones de Resort Disney — el cliente elige su favorita</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+        <div class="pkg-card core" style="position:relative;">
+          <span class="pkg-badge badge-included">Opción 1</span>
+          <div class="pkg-icon">🏨</div>
+          <input class="f wide" id="hotelName" type="text" placeholder="Nombre del resort" style="width:100%;min-width:unset;font-weight:800;font-size:0.88rem;margin-bottom:6px;" />
+          <div class="info-row" style="padding:0.2rem 0;"><span class="info-key">Categoría</span>
+            <select class="f" id="resortCategory" style="font-size:0.75rem;">
+              <option value="">— Selecciona —</option>
+              <option value="Value">Value</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Deluxe Villa">Deluxe Villa</option>
+            </select>
+          </div>
+          <div class="info-row" style="padding:0.2rem 0;"><span class="info-key">Habitación</span><input class="f" id="roomType" type="text" placeholder="ej. Standard, Suite" style="min-width:unset;font-size:0.75rem;" /></div>
+          <div class="info-row" style="padding:0.2rem 0;"><span class="info-key">Dirección</span><input class="f" id="hotelAddress" type="text" placeholder="ej. 1510 N Cove Rd, Orlando" style="min-width:unset;font-size:0.75rem;" /></div>
+          <div style="margin-top:0.8rem;">
+            <div class="pkg-price-label">Precio total del paquete</div>
+            <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceHotel" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+          </div>
+        </div>
+        <div class="pkg-card optional" style="position:relative;">
+          <span class="pkg-badge badge-optional">Opción 2</span>
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:6px;">
+            <input type="checkbox" id="cb-hotel2" onchange="toggleHotel2()" style="width:16px;height:16px;accent-color:#FF6EB4;" />
+            <label for="cb-hotel2" style="font-size:0.75rem;cursor:pointer;color:var(--muted);">Incluir segunda opción</label>
+          </div>
+          <input class="f wide" id="hotelName2" type="text" placeholder="Nombre del resort" style="width:100%;min-width:unset;font-weight:800;font-size:0.88rem;margin-bottom:6px;" />
+          <div class="info-row" style="padding:0.2rem 0;"><span class="info-key">Categoría</span>
+            <select class="f" id="resortCategory2" style="font-size:0.75rem;">
+              <option value="">— Selecciona —</option>
+              <option value="Value">Value</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Deluxe Villa">Deluxe Villa</option>
+            </select>
+          </div>
+          <div class="info-row" style="padding:0.2rem 0;"><span class="info-key">Habitación</span><input class="f" id="roomType2" type="text" placeholder="ej. Standard, Suite" style="min-width:unset;font-size:0.75rem;" /></div>
+          <div class="info-row" style="padding:0.2rem 0;"><span class="info-key">Dirección</span><input class="f" id="hotelAddress2" type="text" placeholder="ej. 1600 Seven Seas Dr, Orlando" style="min-width:unset;font-size:0.75rem;" /></div>
+          <div style="margin-top:0.8rem;">
+            <div class="pkg-price-label">Precio total del paquete</div>
+            <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceHotel2" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <div class="package-grid">
+      <div style="display:none;"></div>
       <div class="pkg-card core">
         <span class="pkg-badge badge-included">✓ Incluido</span>
         <div class="pkg-icon">🎟️</div>
@@ -396,6 +440,8 @@
 
 <script>
   let diningSelected = null;
+  let hotel2Included = false;
+  function toggleHotel2() { hotel2Included = document.getElementById('cb-hotel2').checked; }
   const indExtras = { mm: false, ins: false, ph: false };
 
   function toggleDining(type) {
@@ -464,7 +510,15 @@
       duration:    document.getElementById('duration').value,
       hotelName:   document.getElementById('hotelName').value,
       roomType:    document.getElementById('roomType').value,
-      resortCategory: document.getElementById('resortCategory').value,
+      resortCategory:  document.getElementById('resortCategory').value,
+      hotelName:       document.getElementById('hotelName').value,
+      hotelAddress:    document.getElementById('hotelAddress').value,
+      hotel2Included:  hotel2Included,
+      hotelName2:      document.getElementById('hotelName2').value,
+      resortCategory2: document.getElementById('resortCategory2').value,
+      roomType2:       document.getElementById('roomType2').value,
+      hotelAddress2:   document.getElementById('hotelAddress2').value,
+      priceHotel2:     document.getElementById('priceHotel2').value,
       specialNotes:   document.getElementById('specialNotes').value,
       parkDays:    document.getElementById('parkDays').value,
       priceHotel:  document.getElementById('priceHotel').value,
