@@ -338,7 +338,7 @@
   const D = {};
   try {
     const raw = new URLSearchParams(window.location.search).get('d');
-    if (raw) Object.assign(D, JSON.parse(decodeURIComponent(escape(atob(raw)))));
+    if (raw) { try { Object.assign(D, JSON.parse(atob(raw))); } catch(e) { console.error('decode error', e); } }
   } catch(e) {}
 
   function fmtDate(s) {

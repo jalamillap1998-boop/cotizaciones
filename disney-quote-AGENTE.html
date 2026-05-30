@@ -484,7 +484,7 @@
   function generarClienteLink() {
     const datos = recopilarDatos();
     const json  = JSON.stringify(datos);
-    const b64   = btoa(unescape(encodeURIComponent(json)));
+    const b64   = btoa(json);
     // Get current URL and replace filename with client version
     const base  = window.location.href.replace('disney-quote-AGENTE.html','').replace(/\?.*$/,'');
     generatedUrl = base + 'disney-quote-CLIENTE.html?d=' + b64;
