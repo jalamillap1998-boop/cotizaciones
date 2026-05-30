@@ -374,7 +374,7 @@
   const D = {};
   try {
     const raw = new URLSearchParams(window.location.search).get('d');
-    if (raw) { try { Object.assign(D, JSON.parse(atob(raw))); } catch(e) { console.error(e); } }
+    if (raw) { try { Object.assign(D, JSON.parse(decodeURIComponent(atob(raw).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')))); } catch(e) { try { Object.assign(D, JSON.parse(atob(raw))); } catch(e2) { console.error(e2); } } }
   } catch(e) {}
 
   function fmtDate(s) { if (!s) return '—'; const [y,m,d] = s.split('-'); return d+'/'+m+'/'+y; }
