@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotización Hotel – Magia y Viaja [AGENTE]</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1B4332; --green2: #2D6A4F; --green3: #40916C;
+    --gold: #D4A017; --gold2: #F0C040;
+    --grad: linear-gradient(135deg, #1B4332 0%, #2D6A4F 55%, #40916C 100%);
+    --grad-soft: linear-gradient(135deg, #f0faf4 0%, #e8f5ee 100%);
+    --white: #FFFFFF; --soft: #F4FAF6; --text: #0A1F14;
+    --muted: #5A7A68; --border: #B7DFC8; --sky: #D8F0E4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #0D2B1E 0%, #1B4332 55%, #2D6A4F 100%);
+    min-height: 100vh; display: flex; align-items: flex-start; justify-content: center;
+    padding: 2rem 1rem 6rem;
+  }
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: #0A1F14;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.7rem 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  .top-bar-label { font-size: 0.78rem; font-weight: 900; color: var(--gold2); letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; gap: 0.5rem; }
+  .top-bar-label span { color: rgba(255,255,255,0.5); font-weight: 400; }
+  .top-bar-btns { display: flex; gap: 0.75rem; }
+  .btn { border: none; border-radius: 50px; padding: 0.55rem 1.3rem; font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 900; cursor: pointer; transition: transform 0.15s; letter-spacing: 0.03em; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-share { background: var(--grad); color: white; box-shadow: 0 3px 14px rgba(27,67,50,0.5); }
+  .btn-print { background: rgba(255,255,255,0.12); color: white; }
+
+  .page { position: relative; z-index: 1; background: var(--white); width: 100%; max-width: 880px; border-radius: 24px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.35); margin-top: 3.5rem; animation: fadeUp 0.8s ease forwards; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+
+  .f { background: rgba(27,67,50,0.07); border: 1.5px dashed rgba(27,67,50,0.35); border-radius: 6px; padding: 3px 8px; font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text); outline: none; transition: background 0.15s, border-color 0.15s; min-width: 120px; }
+  .f:focus { background: rgba(27,67,50,0.13); border-color: var(--green2); border-style: solid; }
+  .f.wide { min-width: 200px; } .f.narrow { min-width: 55px; }
+  .f.money { min-width: 90px; font-family: 'Playfair Display', serif; font-size: 0.95rem; }
+  .f.light { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); color: white; }
+  .f.light:focus { background: rgba(255,255,255,0.3); border-color: white; border-style: solid; }
+  .f.light::placeholder { color: rgba(255,255,255,0.5); font-style: italic; font-weight: 400; }
+  .f::placeholder { color: rgba(90,122,104,0.5); font-style: italic; font-weight: 400; }
+  select.f { cursor: pointer; }
+  textarea.f { min-width: unset; width: 100%; resize: vertical; line-height: 1.6; }
+
+  .header { background: var(--grad); padding: 2rem 3rem 1.8rem; position: relative; overflow: hidden; }
+  .header::after { content: ''; position: absolute; right: -30px; top: -30px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.04); pointer-events: none; }
+  .header-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .logo-wrap img { height: 90px; width: 90px; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.15); padding: 4px; }
+  .logo-brand { display: flex; align-items: center; gap: 1rem; }
+  .brand-name { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2); line-height: 1; }
+  .brand-sub { font-size: 0.7rem; color: rgba(255,255,255,0.75); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
+  .quote-badge { text-align: right; }
+  .quote-label { font-size: 0.65rem; color: rgba(255,255,255,0.65); letter-spacing: 0.15em; text-transform: uppercase; }
+  .quote-number { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: white; display: flex; align-items: center; gap: 4px; justify-content: flex-end; }
+  .quote-number span { color: rgba(255,255,255,0.6); }
+  .header-divider { height: 1px; background: rgba(255,255,255,0.3); margin: 1.2rem 0 1rem; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: white; line-height: 1.1; text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .header-title em { color: var(--gold2); font-style: normal; }
+  .header-meta { display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; align-items: flex-end; }
+  .meta-label { font-size: 0.62rem; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 3px; }
+
+  .dest-strip { background: var(--grad-soft); padding: 0.9rem 3rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .dest-icon { font-size: 1.8rem; }
+  .destination-tag { background: var(--grad); color: white; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; }
+
+  .content { padding: 2.5rem 3rem; background: var(--white); }
+  .client-section { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+  .info-card { background: var(--soft); border-radius: 14px; padding: 1.4rem; border: 1px solid var(--sky); }
+  .info-card-title { font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px dashed rgba(0,0,0,0.06); gap: 0.5rem; }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+  .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.2rem; }
+  .section-header h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--text); }
+  .section-dot { width: 8px; height: 8px; background: var(--green2); border-radius: 50%; flex-shrink: 0; }
+
+  /* PACKAGE CARDS */
+  .package-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 2.5rem; }
+  .pkg-card { border-radius: 14px; border: 2px solid var(--border); padding: 1.3rem 1.2rem; position: relative; }
+  .pkg-card.core { background: #f0faf4; border-color: #74c69d; }
+  .pkg-card.optional { background: #fffbea; border-color: #e9c46a; }
+  .pkg-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .pkg-name { font-weight: 800; font-size: 0.9rem; color: var(--text); margin-bottom: 0.3rem; }
+  .pkg-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.8rem; }
+  .pkg-price-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 3px; }
+  .pkg-badge { position: absolute; top: -10px; right: 14px; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 20px; }
+  .badge-included { background: #d8f3dc; color: #1B4332; }
+  .badge-optional { background: #fff3c4; color: #8a5a00; }
+
+  /* EXTRAS */
+  .extras-section { background: linear-gradient(135deg, #f0faf4 0%, #fffbea 100%); border: 2px solid var(--border); border-radius: 16px; padding: 1.6rem; margin-bottom: 2.5rem; }
+  .extras-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.4rem; }
+  .extras-icon { font-size: 1.8rem; }
+  .extras-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--green); }
+  .extras-subtitle { font-size: 0.75rem; color: var(--muted); }
+  .extras-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .extra-option { background: white; border-radius: 10px; padding: 1rem; border: 2px solid var(--border); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+  .extra-option.selected { border-color: var(--green2); background: #edfbf2; }
+  .extra-check { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .extra-check input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--green2); cursor: pointer; }
+  .extra-check label { font-size: 0.85rem; font-weight: 800; color: var(--green); cursor: pointer; }
+  .extra-detail { font-size: 0.73rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.5rem; }
+  .extra-price-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem; }
+  .extra-price-label { font-size: 0.65rem; color: var(--muted); }
+
+  /* TOURS */
+  .tours-section { background: #fffbea; border: 2px solid #e9c46a; border-radius: 16px; padding: 1.6rem; margin-bottom: 2.5rem; }
+  .tours-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #7a4f00; margin-bottom: 0.4rem; }
+  .tours-subtitle { font-size: 0.75rem; color: #9a6f00; margin-bottom: 1.2rem; }
+  .tour-row { display: grid; grid-template-columns: 1fr auto auto; gap: 0.75rem; align-items: center; margin-bottom: 0.75rem; }
+  .tour-row:last-child { margin-bottom: 0; }
+  .add-tour-btn { background: var(--grad); color: white; border: none; border-radius: 50px; padding: 0.5rem 1.2rem; font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 800; cursor: pointer; margin-top: 0.75rem; }
+  .remove-tour-btn { background: none; border: 1.5px solid #e9c46a; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 0.9rem; color: #9a6f00; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  /* TOTALS */
+  .totals-section { display: flex; justify-content: flex-end; margin-bottom: 2.5rem; }
+  .totals-box { background: var(--soft); border-radius: 14px; padding: 1.4rem 2rem; min-width: 310px; border: 1px solid var(--sky); }
+  .total-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; font-size: 0.85rem; }
+  .total-row .label { color: var(--muted); }
+  .total-row.divider { border-top: 1.5px solid var(--border); margin-top: 0.5rem; padding-top: 0.9rem; }
+  .total-row.grand .label { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); }
+  .calc-amount { font-weight: 800; color: var(--text); font-size: 0.9rem; }
+  .calc-total { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--green); font-weight: 700; }
+  .per-person-note { font-size: 0.7rem; color: var(--muted); text-align: right; margin-top: 4px; }
+
+  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .note-box { border-radius: 12px; padding: 1.2rem; border: 1px solid; }
+  .note-box.includes { background: #f0faf4; border-color: #74c69d; }
+  .note-box.excludes { background: #fff8ee; border-color: #ffd9a8; }
+  .note-box-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .note-box.includes .note-box-title { color: var(--green); }
+  .note-box.excludes .note-box-title { color: #b05000; }
+  .note-list { list-style: none; }
+  .note-list li { font-size: 0.8rem; padding: 0.22rem 0; display: flex; align-items: flex-start; gap: 0.5rem; color: var(--text); line-height: 1.4; }
+  .note-box.includes .note-list li::before { content: '✓'; color: var(--green2); font-weight: 900; flex-shrink: 0; }
+  .note-box.excludes .note-list li::before { content: '✗'; color: #FF9A5C; font-weight: 900; flex-shrink: 0; }
+
+  .notes-special-box { background: #f5f0ff; border: 1px solid #c4b5fd; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 2rem; }
+  .notes-special-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #6d28d9; margin-bottom: 0.6rem; }
+
+  .terms-box { background: #fff8ee; border: 1px solid #ffd9a8; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 2.5rem; }
+  .terms-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #b05000; margin-bottom: 0.6rem; }
+  .terms-box p { font-size: 0.78rem; color: #7a4010; line-height: 1.7; }
+
+  .validity-strip { background: var(--grad); text-align: center; padding: 0.55rem; font-size: 0.75rem; font-weight: 900; color: white; letter-spacing: 0.08em; text-transform: uppercase; }
+  .footer { background: #0A1F14; padding: 1.6rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-brand { font-family: 'Playfair Display', serif; color: var(--gold2); font-size: 1.1rem; }
+  .footer-contact p { font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 2; text-align: right; }
+  .footer-contact span { color: rgba(255,255,255,0.9); font-weight: 700; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: white; border-radius: 20px; padding: 2rem; max-width: 420px; width: 90%; text-align: center; }
+  .modal h2 { font-family: 'Playfair Display', serif; color: var(--green); margin-bottom: 0.5rem; }
+  .modal p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem; }
+  .modal-btns { display: flex; flex-direction: column; gap: 0.75rem; }
+  .btn-modal-copy { background: var(--grad); color: white; border: none; border-radius: 50px; padding: 0.8rem 1.5rem; font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 900; cursor: pointer; }
+  .btn-modal-close { background: none; border: 1.5px solid var(--border); border-radius: 50px; padding: 0.7rem 1.5rem; font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; color: var(--muted); }
+  .copy-success { display: none; color: var(--green); font-weight: 800; font-size: 0.85rem; margin-top: 0.5rem; }
+
+  @media (max-width: 620px) {
+    .content, .header { padding: 1.5rem; }
+    .client-section, .notes-grid, .package-grid, .extras-grid { grid-template-columns: 1fr; }
+    .header-title { font-size: 1.6rem; }
+    .footer { flex-direction: column; text-align: center; }
+    .footer-contact p { text-align: center; }
+    .tour-row { grid-template-columns: 1fr auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-label">✦ Modo Agente <span>— Paquete Hotel</span></div>
+  <div class="top-bar-btns">
+    <button class="btn btn-print" onclick="window.print()">🖨️ Imprimir PDF</button>
+    <button class="btn btn-share" onclick="generarClienteLink()">✨ Generar link para cliente</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>¡Listo para compartir!</h2>
+    <p>Link generado para tu cliente. Solo puede ver los datos y marcar extras — no puede editar precios.</p>
+    <div class="modal-btns">
+      <button class="btn-modal-copy" onclick="copiarLink()">📋 Copiar link para cliente</button>
+      <div class="copy-success" id="copyMsg">✓ ¡Link copiado! Pégalo en WhatsApp</div>
+      <div style="margin-top:0.8rem;">
+        <p style="font-size:0.7rem;color:#5A7A68;margin-bottom:4px;">O copia manualmente:</p>
+        <textarea id="linkDisplay" readonly style="width:100%;font-size:0.7rem;padding:6px;border-radius:8px;border:1px solid #B7DFC8;background:#F4FAF6;color:#0A1F14;resize:none;height:60px;font-family:monospace;"></textarea>
+      </div>
+      <button class="btn-modal-close" onclick="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="logo-brand">
+        <div class="logo-wrap"><img src="logo.png" alt="Magia y Viaja" /></div>
+        <div>
+          <div class="brand-name">Magia y Viaja</div>
+          <div class="brand-sub">Agencia de Viajes Especializada</div>
+        </div>
+      </div>
+      <div class="quote-badge">
+        <div class="quote-label">Cotización Nº</div>
+        <div class="quote-number">
+          <span>#HTL-2026-</span>
+          <input class="f light narrow" id="quoteNum" type="text" placeholder="001" maxlength="6" style="min-width:52px;" />
+        </div>
+      </div>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Paquete <em>Hotel & Vacaciones</em> 🌴✨</div>
+    <div class="header-meta">
+      <div><span class="meta-label">Fecha de cotización</span><input class="f light" type="date" id="quoteDate" /></div>
+      <div><span class="meta-label">Válida hasta</span><input class="f light" type="date" id="validDate" /></div>
+      <div><span class="meta-label">Asesor(a)</span><input class="f light" type="text" id="agentName" placeholder="Tu nombre" /></div>
+    </div>
+  </div>
+
+  <div class="dest-strip">
+    <div class="dest-icon">📍</div>
+    <span class="destination-tag">Destino</span>
+    <input class="f" id="destination" type="text" placeholder="ej. Orlando, Florida · Cancún · Miami Beach..." style="min-width:250px;font-style:italic;font-family:'Playfair Display',serif;" />
+  </div>
+
+  <div class="content">
+
+    <div class="client-section">
+      <div class="info-card">
+        <div class="info-card-title">🧑‍🤝‍🧑 Datos del Viajero</div>
+        <div class="info-row"><span class="info-key">Nombre completo</span><input class="f wide" id="clientName" type="text" placeholder="Nombre del cliente" /></div>
+        <div class="info-row"><span class="info-key">WhatsApp</span><input class="f" id="clientPhone" type="tel" placeholder="+1 000 000 0000" /></div>
+        <div class="info-row"><span class="info-key">Adultos</span><input class="f narrow" id="numAdults" type="number" min="0" placeholder="0" oninput="recalc()" /></div>
+        <div class="info-row"><span class="info-key">Niños</span><input class="f narrow" id="numKids" type="number" min="0" placeholder="0" oninput="recalc()" /></div>
+        <div class="info-row"><span class="info-key">Edades de los niños</span><input class="f wide" id="kidsAges" type="text" placeholder="ej. 5, 8 años" /></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🗓️ Detalles del Viaje</div>
+        <div class="info-row"><span class="info-key">Fecha de llegada</span><input class="f" id="arrivalDate" type="date" /></div>
+        <div class="info-row"><span class="info-key">Fecha de salida</span><input class="f" id="departDate" type="date" /></div>
+        <div class="info-row"><span class="info-key">Noches / Días</span><input class="f" id="duration" type="text" placeholder="ej. 4 noches / 5 días" /></div>
+        <div class="info-row"><span class="info-key">Hotel preferido</span><span style="font-size:0.75rem;color:var(--muted);font-style:italic;">Ver opciones abajo</span></div>
+      </div>
+    </div>
+
+    <!-- PACKAGE -->
+    <div class="section-header"><div class="section-dot"></div><h3>Detalle del Paquete</h3></div>
+
+    <!-- HOTEL OPTIONS -->
+    <div style="background:var(--grad-soft);border:2px solid var(--border);border-radius:16px;padding:1.4rem;margin-bottom:1.2rem;">
+      <div style="font-family:Playfair Display,serif;font-size:1rem;color:var(--green);margin-bottom:1rem;">🏨 Opciones de Hotel — el cliente elige su favorita</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+
+        <!-- HOTEL 1 -->
+        <div class="pkg-card core" style="position:relative;">
+          <span class="pkg-badge badge-included">Opción 1</span>
+          <div class="pkg-icon">🏨</div>
+          <div style="margin-bottom:0.4rem;"><input class="f wide" id="hotelName" type="text" placeholder="Nombre del hotel" style="width:100%;min-width:unset;font-weight:800;font-size:0.9rem;" /></div>
+          <div class="info-row" style="padding:0.25rem 0;"><span class="info-key">Estrellas</span>
+            <select class="f narrow" id="hotelStars"><option value="">—</option><option value="3">⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="5">⭐⭐⭐⭐⭐</option></select>
+          </div>
+          <div class="info-row" style="padding:0.25rem 0;"><span class="info-key">Habitación</span><input class="f" id="roomType" type="text" placeholder="ej. Suite Doble" style="min-width:unset;font-size:0.78rem;" /></div>
+          <div class="info-row" style="padding:0.25rem 0;"><span class="info-key">Plan</span>
+            <select class="f" id="mealPlan" style="font-size:0.78rem;"><option value="">—</option><option value="Solo habitación">Solo habitación</option><option value="Desayuno incluido">Desayuno incluido</option><option value="Media pensión">Media pensión</option><option value="Todo incluido">Todo incluido</option></select>
+          </div>
+          <div class="info-row" style="padding:0.25rem 0;"><span class="info-key">Dirección</span><input class="f" id="hotelAddress" type="text" placeholder="ej. 1234 Hotel Dr, Orlando FL" style="min-width:unset;font-size:0.75rem;" /></div>
+          <div style="margin-top:0.8rem;">
+            <div class="pkg-price-label">Precio total</div>
+            <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceHotel" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+          </div>
+        </div>
+
+        <!-- HOTEL 2 -->
+        <div class="pkg-card optional" style="position:relative;">
+          <span class="pkg-badge badge-optional">Opción 2</span>
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+            <input type="checkbox" id="cb-hotel2" onchange="toggleHotel2()" style="width:16px;height:16px;accent-color:var(--green2);" />
+            <label for="cb-hotel2" style="font-size:0.75rem;cursor:pointer;color:var(--muted);">Incluir segunda opción</label>
+          </div>
+          <div style="margin-bottom:0.4rem;"><input class="f wide" id="hotelName2" type="text" placeholder="Nombre del hotel" style="width:100%;min-width:unset;font-weight:800;font-size:0.9rem;" /></div>
+          <div class="info-row" style="padding:0.25rem 0;"><span class="info-key">Estrellas</span>
+            <select class="f narrow" id="hotelStars2"><option value="">—</option><option value="3">⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="5">⭐⭐⭐⭐⭐</option></select>
+          </div>
+          <div class="info-row" style="padding:0.25rem 0;"><span class="info-key">Habitación</span><input class="f" id="roomType2" type="text" placeholder="ej. Habitación Estándar" style="min-width:unset;font-size:0.78rem;" /></div>
+          <div class="info-row" style="padding:0.25rem 0;"><span class="info-key">Plan</span>
+            <select class="f" id="mealPlan2" style="font-size:0.78rem;"><option value="">—</option><option value="Solo habitación">Solo habitación</option><option value="Desayuno incluido">Desayuno incluido</option><option value="Media pensión">Media pensión</option><option value="Todo incluido">Todo incluido</option></select>
+          </div>
+          <div class="info-row" style="padding:0.25rem 0;"><span class="info-key">Dirección</span><input class="f" id="hotelAddress2" type="text" placeholder="ej. 5678 Resort Blvd, Orlando FL" style="min-width:unset;font-size:0.75rem;" /></div>
+          <div style="margin-top:0.8rem;">
+            <div class="pkg-price-label">Precio total</div>
+            <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceHotel2" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="package-grid">
+      <div style="display:none;"></div><!-- spacer -->
+      <div class="pkg-card optional" id="card-flights">
+        <span class="pkg-badge badge-optional">Opcional</span>
+        <div class="pkg-icon">✈️</div>
+        <div class="pkg-name">Vuelos</div>
+        <div class="pkg-desc">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:6px;">
+            <input type="checkbox" id="cb-flights" onchange="toggleFlights()" style="width:16px;height:16px;accent-color:var(--green2);" />
+            <label for="cb-flights" style="font-size:0.78rem;cursor:pointer;">Incluir vuelos</label>
+          </div>
+          <input class="f" id="flightsDesc" type="text" placeholder="ej. Vuelo redondo desde Miami" style="width:100%;min-width:unset;font-size:0.75rem;" />
+        </div>
+        <div class="pkg-price-label">Precio total</div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceFlights" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+      </div>
+      <div class="pkg-card optional">
+        <span class="pkg-badge badge-optional">Opcional</span>
+        <div class="pkg-icon">🚌</div>
+        <div class="pkg-name">Traslados</div>
+        <div class="pkg-desc">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:6px;">
+            <input type="checkbox" id="cb-transfers" onchange="toggleTransfers()" style="width:16px;height:16px;accent-color:var(--green2);" />
+            <label for="cb-transfers" style="font-size:0.78rem;cursor:pointer;">Incluir traslados</label>
+          </div>
+          <select class="f" id="transferType" style="width:100%;min-width:unset;font-size:0.75rem;">
+            <option value="Aeropuerto ↔ Hotel">Aeropuerto ↔ Hotel</option>
+            <option value="Privado">Privado</option>
+            <option value="Compartido">Compartido</option>
+          </select>
+        </div>
+        <div class="pkg-price-label">Precio total</div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceTransfers" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+      </div>
+    </div>
+
+    <!-- CAR + ATTRACTIONS -->
+    <div class="package-grid-2">
+      <div class="pkg-card optional">
+        <span class="pkg-badge badge-optional">Opcional</span>
+        <div class="pkg-icon">🚗</div>
+        <div class="pkg-name">Renta de Auto</div>
+        <div class="pkg-desc">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:6px;">
+            <input type="checkbox" id="cb-car" onchange="toggleCar()" style="width:16px;height:16px;accent-color:var(--green2);" />
+            <label for="cb-car" style="font-size:0.78rem;cursor:pointer;">Incluir renta de auto</label>
+          </div>
+          <input class="f" id="carType" type="text" placeholder="ej. SUV mediana, sedan 5 pasajeros" style="width:100%;min-width:unset;font-size:0.75rem;margin-bottom:6px;" />
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <input class="f narrow" id="carDays" type="number" min="1" placeholder="0" style="min-width:45px;font-size:0.75rem;" />
+            <span style="font-size:0.75rem;color:var(--muted);">días</span>
+          </div>
+        </div>
+        <div class="pkg-price-label">Precio total</div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceCar" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+      </div>
+
+      <div class="pkg-card optional">
+        <span class="pkg-badge badge-optional">Opcional</span>
+        <div class="pkg-icon">🎡</div>
+        <div class="pkg-name">Entradas a Atracciones</div>
+        <div class="pkg-desc">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:6px;">
+            <input type="checkbox" id="cb-attractions" onchange="toggleAttractions()" style="width:16px;height:16px;accent-color:var(--green2);" />
+            <label for="cb-attractions" style="font-size:0.78rem;cursor:pointer;">Incluir entradas</label>
+          </div>
+          <div id="attractionsList">
+            <div class="tour-row" id="attr-0">
+              <input class="f" type="text" placeholder="ej. SeaWorld, Kennedy Space Center" style="font-size:0.78rem;" oninput="recalc()" id="attrName0" />
+              <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.8rem;color:var(--muted);">$</span><input class="f money narrow" type="number" min="0" placeholder="0.00" oninput="recalc()" id="attrPrice0" style="min-width:75px;" /></div>
+              <button class="remove-tour-btn" onclick="removeAttr(0)">✕</button>
+            </div>
+          </div>
+          <button class="add-tour-btn" onclick="addAttr()" style="margin-top:0.5rem;font-size:0.75rem;padding:0.4rem 1rem;">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOURS -->
+    <div class="tours-section">
+      <div class="tours-title">🗺️ Tours y Actividades</div>
+      <div class="tours-subtitle">Agrega los tours que incluye el paquete (opcional)</div>
+      <div id="toursList">
+        <div class="tour-row" id="tour-0">
+          <input class="f" type="text" placeholder="ej. Tour en bote por los Everglades" style="font-size:0.8rem;" oninput="recalc()" id="tourName0" />
+          <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.8rem;color:var(--muted);">$</span><input class="f money narrow" type="number" min="0" placeholder="0.00" oninput="recalc()" id="tourPrice0" style="min-width:80px;" /></div>
+          <button class="remove-tour-btn" onclick="removeTour(0)">✕</button>
+        </div>
+      </div>
+      <button class="add-tour-btn" onclick="addTour()">+ Agregar tour</button>
+    </div>
+
+    <!-- EXTRAS -->
+    <div class="extras-section">
+      <div class="extras-header">
+        <div class="extras-icon">✨</div>
+        <div>
+          <div class="extras-title">Extras Opcionales</div>
+          <div class="extras-subtitle">Selecciona los extras que deseas incluir</div>
+        </div>
+      </div>
+      <div class="extras-grid">
+        <div class="extra-option" id="opt-ins">
+          <div class="extra-check"><input type="checkbox" id="cb-ins" onchange="toggleExtra('ins')" /><label for="cb-ins">🛡️ Seguro de Viaje</label></div>
+          <div class="extra-detail">Cobertura médica, cancelación y equipaje. Asistencia 24/7 en destino.</div>
+          <div class="extra-price-row"><span class="extra-price-label">Precio por paquete: $</span><input class="f money narrow" id="priceIns" type="number" min="0" placeholder="0.00" oninput="recalc()" onclick="event.stopPropagation()" /></div>
+        </div>
+        <div class="extra-option" id="opt-extra1">
+          <div class="extra-check"><input type="checkbox" id="cb-extra1" onchange="toggleExtra('extra1')" /><label for="cb-extra1">➕ Extra adicional</label></div>
+          <div class="extra-detail">
+            <input class="f" id="extra1Name" type="text" placeholder="ej. Renta de auto, Spa, etc." style="width:100%;min-width:unset;font-size:0.75rem;margin-top:4px;" onclick="event.stopPropagation()" />
+          </div>
+          <div class="extra-price-row"><span class="extra-price-label">Precio por paquete: $</span><input class="f money narrow" id="priceExtra1" type="number" min="0" placeholder="0.00" oninput="recalc()" onclick="event.stopPropagation()" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOTALS -->
+    <div class="totals-section">
+      <div class="totals-box">
+        <div class="total-row"><span class="label">Hospedaje</span><span class="calc-amount" id="t-hotel">$ 0.00</span></div>
+        <div class="total-row" id="row-flights" style="display:none;"><span class="label">Vuelos</span><span class="calc-amount" id="t-flights">$ 0.00</span></div>
+        <div class="total-row" id="row-transfers" style="display:none;"><span class="label">Traslados</span><span class="calc-amount" id="t-transfers">$ 0.00</span></div>
+        <div id="toursTotalRows"></div>
+        <div class="total-row" id="row-car" style="display:none;"><span class="label">Renta de auto</span><span class="calc-amount" id="t-car">$ 0.00</span></div>
+        <div id="attrsTotalRows"></div>
+        <div class="total-row" id="row-ins" style="display:none;"><span class="label">Seguro de viaje</span><span class="calc-amount" id="t-ins">$ 0.00</span></div>
+        <div class="total-row" id="row-extra1" style="display:none;"><span class="label" id="label-extra1">Extra adicional</span><span class="calc-amount" id="t-extra1">$ 0.00</span></div>
+        <div class="total-row">
+          <span class="label">Descuento / Promoción</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.8rem;color:var(--muted);">− $</span><input class="f money narrow" id="discount" type="number" min="0" placeholder="0.00" oninput="recalc()" /></span>
+        </div>
+        <div class="total-row divider grand"><span class="label">TOTAL</span><span class="calc-total" id="t-total">$ 0.00</span></div>
+        <div class="per-person-note" id="t-per-person"></div>
+      </div>
+    </div>
+
+    <!-- INCLUDES / EXCLUDES -->
+    <div class="notes-grid">
+      <div class="note-box includes">
+        <div class="note-box-title">✅ El paquete incluye</div>
+        <ul class="note-list" id="includesList">
+          <li>Hospedaje según noches cotizadas</li>
+          <li id="li-mealplan">Plan de comidas según selección</li>
+          <li id="li-flights" style="display:none;">Vuelos según itinerario</li>
+          <li id="li-transfers" style="display:none;">Traslados aeropuerto ↔ hotel</li>
+          <li id="li-car" style="display:none;">Renta de auto incluida</li>
+          <li id="li-attractions" style="display:none;">Entradas a atracciones</li>
+          <li>Asesoría y acompañamiento 24/7 de Magia y Viaja</li>
+        </ul>
+      </div>
+      <div class="note-box excludes">
+        <div class="note-box-title">❌ No incluye</div>
+        <ul class="note-list">
+          <li id="li-no-flights">Vuelos (se pueden agregar)</li>
+          <li>Gastos personales y souvenirs</li>
+          <li>Trámite de visa (si aplica)</li>
+          <li>Propinas y extras en hotel</li>
+          <li>Actividades no mencionadas</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SPECIAL NOTES -->
+    <div class="notes-special-box">
+      <div class="notes-special-title">📝 Notas Especiales</div>
+      <textarea class="f" id="specialNotes" placeholder="ej. Habitación con vista al mar confirmada · Cuna solicitada · Ocasión especial: luna de miel..." rows="3"></textarea>
+    </div>
+
+    <!-- TERMS -->
+    <div class="terms-box">
+      <div class="terms-title">⚠️ Condiciones y Política de Pago</div>
+      <textarea class="f" id="termsText" rows="4" placeholder="Escribe aquí las condiciones de pago para esta cotización...">Para confirmar la reservación se requiere un depósito de $ _____ USD. El saldo restante deberá liquidarse _____ días antes de la fecha de llegada. Cancelaciones con menos de _____ días de anticipación pueden estar sujetas a penalizaciones. Precios en dólares americanos (USD). Disponibilidad sujeta a confirmación.</textarea>
+    </div>
+
+  </div>
+
+  <div class="validity-strip">✦ Cotización válida por 3 días a partir de la fecha de emisión — Magia y Viaja ✦</div>
+  <div class="footer">
+    <div class="footer-brand">✦ Magia y Viaja</div>
+    <div class="footer-contact"><p>📱 WhatsApp: <span>+1 863 604 6310</span><br>Instagram: <span>@magiayviaja</span></p></div>
+  </div>
+</div>
+
+<script>
+  const indExtras = { ins: false, extra1: false };
+  let carIncluded = false;
+  let hotel2Included = false;
+  let attractionsIncluded = false;
+  let attrCount = 1;
+  let flightsIncluded = false;
+  let transfersIncluded = false;
+  let tourCount = 1;
+
+  function toggleHotel2() {
+    hotel2Included = document.getElementById('cb-hotel2').checked;
+    recalc();
+  }
+
+  function toggleCar() {
+    carIncluded = document.getElementById('cb-car').checked;
+    document.getElementById('li-car').style.display = carIncluded ? '' : 'none';
+    recalc();
+  }
+
+  function toggleAttractions() {
+    attractionsIncluded = document.getElementById('cb-attractions').checked;
+    document.getElementById('li-attractions').style.display = attractionsIncluded ? '' : 'none';
+    recalc();
+  }
+
+  function addAttr() {
+    const idx = attrCount++;
+    const div = document.createElement('div');
+    div.className = 'tour-row';
+    div.id = 'attr-' + idx;
+    div.innerHTML = '<input class="f" type="text" placeholder="ej. Legoland, Busch Gardens" style="font-size:0.78rem;" oninput="recalc()" id="attrName' + idx + '" />' +
+      '<div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.8rem;color:var(--muted);">$</span><input class="f money narrow" type="number" min="0" placeholder="0.00" oninput="recalc()" id="attrPrice' + idx + '" style="min-width:75px;"></div>' +
+      '<button class="remove-tour-btn" onclick="removeAttr(' + idx + ')">✕</button>';
+    document.getElementById('attractionsList').appendChild(div);
+  }
+
+  function removeAttr(idx) {
+    const el = document.getElementById('attr-' + idx);
+    if (el) el.remove();
+    recalc();
+  }
+
+  function toggleFlights() {
+    flightsIncluded = document.getElementById('cb-flights').checked;
+    document.getElementById('li-flights').style.display = flightsIncluded ? '' : 'none';
+    document.getElementById('li-no-flights').style.display = flightsIncluded ? 'none' : '';
+    recalc();
+  }
+
+  function toggleTransfers() {
+    transfersIncluded = document.getElementById('cb-transfers').checked;
+    document.getElementById('li-transfers').style.display = transfersIncluded ? '' : 'none';
+    recalc();
+  }
+
+  function toggleExtra(type) {
+    indExtras[type] = document.getElementById('cb-' + type).checked;
+    document.getElementById('opt-' + type).classList.toggle('selected', indExtras[type]);
+    if (type === 'extra1') {
+      const name = document.getElementById('extra1Name').value || 'Extra adicional';
+      document.getElementById('label-extra1').textContent = name;
+    }
+    recalc();
+  }
+
+  function addTour() {
+    const idx = tourCount++;
+    const div = document.createElement('div');
+    div.className = 'tour-row';
+    div.id = 'tour-' + idx;
+    div.innerHTML = '<input class="f" type="text" placeholder="ej. City Tour, Snorkel, etc." style="font-size:0.8rem;" oninput="recalc()" id="tourName' + idx + '" />' +
+      '<div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.8rem;color:var(--muted);">$</span><input class="f money narrow" type="number" min="0" placeholder="0.00" oninput="recalc()" id="tourPrice' + idx + '" style="min-width:80px;" /></div>' +
+      '<button class="remove-tour-btn" onclick="removeTour(' + idx + ')">✕</button>';
+    document.getElementById('toursList').appendChild(div);
+  }
+
+  function removeTour(idx) {
+    const el = document.getElementById('tour-' + idx);
+    if (el) el.remove();
+    recalc();
+  }
+
+  function val(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
+  function fmt(n) { return '$ ' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+  function recalc() {
+    const hotel     = val('priceHotel');
+    const flights   = flightsIncluded   ? val('priceFlights')   : 0;
+    const transfers = transfersIncluded ? val('priceTransfers') : 0;
+    const carAmt    = carIncluded ? val('priceCar') : 0;
+    const hotel2Amt = hotel2Included ? val('priceHotel2') : 0;
+    let attrsTotal = 0;
+    if (attractionsIncluded) {
+      document.querySelectorAll('[id^="attr-"]').forEach(row => {
+        const idx = row.id.split('-')[1];
+        attrsTotal += parseFloat(document.getElementById('attrPrice' + idx)?.value) || 0;
+      });
+    }
+    const insAmt    = indExtras.ins    ? val('priceIns')    : 0;
+    const extra1Amt = indExtras.extra1 ? val('priceExtra1') : 0;
+    const discount  = val('discount');
+    const adults    = parseInt(document.getElementById('numAdults').value) || 0;
+    const kids      = parseInt(document.getElementById('numKids').value) || 0;
+    const pax       = adults + kids;
+
+    // Tours
+    let toursTotal = 0;
+    const toursContainer = document.getElementById('toursTotalRows');
+    toursContainer.innerHTML = '';
+    const tourRows = document.querySelectorAll('[id^="tour-"]');
+    tourRows.forEach(row => {
+      const idx = row.id.split('-')[1];
+      const name = document.getElementById('tourName' + idx)?.value || 'Tour';
+      const price = parseFloat(document.getElementById('tourPrice' + idx)?.value) || 0;
+      if (price > 0) {
+        toursTotal += price;
+        const el = document.createElement('div');
+        el.className = 'total-row';
+        el.innerHTML = '<span class="label">' + (name || 'Tour') + '</span><span class="calc-amount">' + fmt(price) + '</span>';
+        toursContainer.appendChild(el);
+      }
+    });
+
+    const total = Math.max(0, hotel + flights + transfers + toursTotal + carAmt + attrsTotal + insAmt + extra1Amt - discount);
+
+    document.getElementById('t-hotel').textContent = fmt(hotel);
+    document.getElementById('t-car').textContent   = fmt(carAmt);
+    document.getElementById('row-car').style.display = carIncluded ? '' : 'none';
+    document.getElementById('t-flights').textContent   = fmt(flights);
+    document.getElementById('t-transfers').textContent = fmt(transfers);
+    document.getElementById('t-ins').textContent       = fmt(insAmt);
+    document.getElementById('t-extra1').textContent    = fmt(extra1Amt);
+    document.getElementById('t-total').textContent     = fmt(total);
+
+    document.getElementById('row-flights').style.display   = flightsIncluded   ? '' : 'none';
+    document.getElementById('row-transfers').style.display = transfersIncluded ? '' : 'none';
+    // Attractions total rows
+    const attrsContainer = document.getElementById('attrsTotalRows');
+    attrsContainer.innerHTML = '';
+    if (attractionsIncluded) {
+      document.querySelectorAll('[id^="attr-"]').forEach(row => {
+        const idx = row.id.split('-')[1];
+        const name = document.getElementById('attrName' + idx)?.value || 'Atracción';
+        const price = parseFloat(document.getElementById('attrPrice' + idx)?.value) || 0;
+        if (price > 0) {
+          const el = document.createElement('div');
+          el.className = 'total-row';
+          el.innerHTML = '<span class="label">' + name + '</span><span class="calc-amount">' + fmt(price) + '</span>';
+          attrsContainer.appendChild(el);
+        }
+      });
+    }
+    document.getElementById('row-ins').style.display = indExtras.ins ? '' : 'none';
+    document.getElementById('row-extra1').style.display    = indExtras.extra1 ? '' : 'none';
+
+    if (indExtras.extra1) {
+      document.getElementById('label-extra1').textContent = document.getElementById('extra1Name').value || 'Extra adicional';
+    }
+
+    document.getElementById('t-per-person').textContent = pax > 0 && total > 0 ? '≈ ' + fmt(total/pax) + ' por persona' : '';
+  }
+
+  // ── GENERATE CLIENT LINK ──
+  function recopilarDatos() {
+    const tours = [];
+    document.querySelectorAll('[id^="tour-"]').forEach(row => {
+      const idx = row.id.split('-')[1];
+      const name = document.getElementById('tourName' + idx)?.value || '';
+      const price = document.getElementById('tourPrice' + idx)?.value || '0';
+      tours.push({ name, price });
+    });
+    return {
+      quoteNum:     document.getElementById('quoteNum').value,
+      quoteDate:    document.getElementById('quoteDate').value,
+      validDate:    document.getElementById('validDate').value,
+      agentName:    document.getElementById('agentName').value,
+      destination:  document.getElementById('destination').value,
+      clientName:   document.getElementById('clientName').value,
+      clientPhone:  document.getElementById('clientPhone').value,
+      numAdults:    document.getElementById('numAdults').value,
+      numKids:      document.getElementById('numKids').value,
+      kidsAges:     document.getElementById('kidsAges').value,
+      arrivalDate:  document.getElementById('arrivalDate').value,
+      departDate:   document.getElementById('departDate').value,
+      duration:     document.getElementById('duration').value,
+      hotelName:    document.getElementById('hotelName').value,
+      hotelStars:   document.getElementById('hotelStars').value,
+      roomType:     document.getElementById('roomType').value,
+      mealPlan:     document.getElementById('mealPlan').value,
+      priceHotel:   document.getElementById('priceHotel').value,
+      hotel2Included: hotel2Included,
+      hotelName2:     document.getElementById('hotelName2').value,
+      hotelAddress:   document.getElementById('hotelAddress').value,
+      hotelAddress2:  document.getElementById('hotelAddress2').value,
+      hotelStars2:  document.getElementById('hotelStars2').value,
+      roomType2:    document.getElementById('roomType2').value,
+      mealPlan2:    document.getElementById('mealPlan2').value,
+      priceHotel2:  document.getElementById('priceHotel2').value,
+      flightsIncluded: flightsIncluded,
+      flightsDesc:  document.getElementById('flightsDesc').value,
+      priceFlights: document.getElementById('priceFlights').value,
+      transfersIncluded: transfersIncluded,
+      transferType: document.getElementById('transferType').value,
+      carIncluded:  carIncluded,
+      carType:      document.getElementById('carType').value,
+      carDays:      document.getElementById('carDays').value,
+      priceCar:     document.getElementById('priceCar').value,
+      attractionsIncluded: attractionsIncluded,
+      attractions:  JSON.stringify((() => { const a = []; document.querySelectorAll('[id^="attr-"]').forEach(r => { const i = r.id.split('-')[1]; a.push({name: document.getElementById('attrName'+i)?.value||'', price: document.getElementById('attrPrice'+i)?.value||'0'}); }); return a; })()),
+      priceTransfers: document.getElementById('priceTransfers').value,
+      tours:        JSON.stringify(tours),
+      priceIns:     document.getElementById('priceIns').value,
+      insIncluded:  indExtras.ins,
+      extra1Included: indExtras.extra1,
+      extra1Name:   document.getElementById('extra1Name').value,
+      priceExtra1:  document.getElementById('priceExtra1').value,
+      discount:     document.getElementById('discount').value,
+      specialNotes: document.getElementById('specialNotes').value,
+      termsText:    document.getElementById('termsText').value,
+    };
+  }
+
+  let generatedUrl = '';
+  function generarClienteLink() {
+    const datos = recopilarDatos();
+    const b64   = btoa(JSON.stringify(datos));
+    const base  = window.location.href.replace('hotel-quote-AGENTE.html','').replace(/\?.*$/,'');
+    generatedUrl = base + 'hotel-quote-CLIENTE.html?d=' + b64;
+    document.getElementById('modal').classList.add('active');
+    document.getElementById('copyMsg').style.display = 'none';
+    document.getElementById('linkDisplay').value = generatedUrl;
+  }
+  function copiarLink() {
+    navigator.clipboard.writeText(generatedUrl).then(() => {
+      document.getElementById('copyMsg').style.display = 'block';
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = generatedUrl;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      document.getElementById('copyMsg').style.display = 'block';
+    });
+  }
+  function cerrarModal() { document.getElementById('modal').classList.remove('active'); }
+</script>
+</body>
+</html>

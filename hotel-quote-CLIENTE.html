@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu Cotización Hotel – Magia y Viaja</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1B4332; --green2: #2D6A4F; --green3: #40916C;
+    --gold: #D4A017; --gold2: #F0C040;
+    --grad: linear-gradient(135deg, #1B4332 0%, #2D6A4F 55%, #40916C 100%);
+    --grad-soft: linear-gradient(135deg, #f0faf4 0%, #e8f5ee 100%);
+    --white: #FFFFFF; --soft: #F4FAF6; --text: #0A1F14;
+    --muted: #5A7A68; --border: #B7DFC8; --sky: #D8F0E4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: linear-gradient(135deg, #0D2B1E 0%, #1B4332 55%, #2D6A4F 100%); min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem 5rem; }
+  .print-bar { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 100; }
+  .btn-print { background: var(--grad); color: white; border: none; border-radius: 50px; padding: 0.85rem 1.8rem; font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 20px rgba(27,67,50,0.5); }
+  .page { background: var(--white); width: 100%; max-width: 880px; border-radius: 24px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.35); animation: fadeUp 0.8s ease forwards; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+  .rv { font-size: 0.85rem; font-weight: 700; color: var(--text); text-align: right; }
+
+  .header { background: var(--grad); padding: 2rem 3rem 1.8rem; }
+  .header-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .logo-wrap img { height: 90px; width: 90px; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.15); padding: 4px; }
+  .logo-brand { display: flex; align-items: center; gap: 1rem; }
+  .brand-name { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2); line-height: 1; }
+  .brand-sub { font-size: 0.7rem; color: rgba(255,255,255,0.75); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
+  .quote-badge { text-align: right; }
+  .quote-label { font-size: 0.65rem; color: rgba(255,255,255,0.65); letter-spacing: 0.15em; text-transform: uppercase; }
+  .quote-number { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: white; }
+  .header-divider { height: 1px; background: rgba(255,255,255,0.3); margin: 1.2rem 0 1rem; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: white; line-height: 1.1; }
+  .header-title em { color: var(--gold2); font-style: normal; }
+  .header-meta { display: flex; gap: 2rem; margin-top: 1rem; flex-wrap: wrap; }
+  .meta-label { font-size: 0.62rem; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 2px; }
+  .meta-val { font-size: 0.9rem; color: white; font-weight: 700; }
+
+  .dest-strip { background: var(--grad-soft); padding: 0.9rem 3rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .dest-icon { font-size: 1.8rem; }
+  .destination-tag { background: var(--grad); color: white; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; }
+  .destination-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); font-style: italic; }
+
+  .content { padding: 2.5rem 3rem; background: var(--white); }
+  .client-section { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+  .info-card { background: var(--soft); border-radius: 14px; padding: 1.4rem; border: 1px solid var(--sky); }
+  .info-card-title { font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px dashed rgba(0,0,0,0.06); gap: 0.5rem; }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+  .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.2rem; }
+  .section-header h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--text); }
+  .section-dot { width: 8px; height: 8px; background: var(--green2); border-radius: 50%; flex-shrink: 0; }
+
+  .package-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 2.5rem; }
+  .pkg-card { border-radius: 14px; border: 2px solid var(--border); padding: 1.3rem 1.2rem; position: relative; }
+  .pkg-card.core { background: #f0faf4; border-color: #74c69d; }
+  .pkg-card.optional { background: #fffbea; border-color: #e9c46a; }
+  .pkg-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .pkg-name { font-weight: 800; font-size: 0.9rem; color: var(--text); margin-bottom: 0.3rem; }
+  .pkg-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.8rem; }
+  .pkg-price-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 3px; }
+  .pkg-price-val { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--green); font-weight: 700; }
+  .pkg-badge { position: absolute; top: -10px; right: 14px; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+  .badge-included { background: #d8f3dc; color: #1B4332; }
+  .badge-optional { background: #fff3c4; color: #8a5a00; }
+
+  /* TOURS */
+  .tours-section { background: #fffbea; border: 2px solid #e9c46a; border-radius: 16px; padding: 1.4rem; margin-bottom: 2.5rem; }
+  .tours-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: #7a4f00; margin-bottom: 1rem; }
+  .tour-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px dashed #e9c46a; font-size: 0.85rem; }
+  .tour-item:last-child { border-bottom: none; }
+  .tour-item-name { color: var(--text); font-weight: 600; }
+  .tour-item-price { font-family: 'Playfair Display', serif; color: #7a4f00; font-weight: 700; }
+
+  /* EXTRAS */
+  .extras-section { background: var(--grad-soft); border: 2px solid var(--border); border-radius: 16px; padding: 1.6rem; margin-bottom: 2.5rem; }
+  .extras-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.4rem; }
+  .extras-icon { font-size: 1.8rem; }
+  .extras-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--green); }
+  .extras-subtitle { font-size: 0.75rem; color: var(--muted); }
+  .extras-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .extra-option { background: white; border-radius: 10px; padding: 1rem; border: 2px solid var(--border); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+  .extra-option.selected { border-color: var(--green2); background: #edfbf2; }
+  .extra-check { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .extra-check input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--green2); cursor: pointer; }
+  .extra-check label { font-size: 0.85rem; font-weight: 800; color: var(--green); cursor: pointer; }
+  .extra-detail { font-size: 0.73rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.5rem; }
+  .extra-price-sublabel { font-size: 0.62rem; color: var(--muted); }
+  .extra-price-display { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--green); font-weight: 700; margin-top: 0.3rem; }
+
+  .totals-section { display: flex; justify-content: flex-end; margin-bottom: 2.5rem; }
+  .totals-box { background: var(--soft); border-radius: 14px; padding: 1.4rem 2rem; min-width: 310px; border: 1px solid var(--sky); }
+  .total-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; font-size: 0.85rem; }
+  .total-row .label { color: var(--muted); }
+  .total-row.divider { border-top: 1.5px solid var(--border); margin-top: 0.5rem; padding-top: 0.9rem; }
+  .total-row.grand .label { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); }
+  .calc-amount { font-weight: 800; color: var(--text); font-size: 0.9rem; }
+  .calc-total { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--green); font-weight: 700; }
+  .per-person-note { font-size: 0.7rem; color: var(--muted); text-align: right; margin-top: 4px; }
+
+  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .note-box { border-radius: 12px; padding: 1.2rem; border: 1px solid; }
+  .note-box.includes { background: #f0faf4; border-color: #74c69d; }
+  .note-box.excludes { background: #fff8ee; border-color: #ffd9a8; }
+  .note-box-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .note-box.includes .note-box-title { color: var(--green); }
+  .note-box.excludes .note-box-title { color: #b05000; }
+  .note-list { list-style: none; }
+  .note-list li { font-size: 0.8rem; padding: 0.22rem 0; display: flex; align-items: flex-start; gap: 0.5rem; color: var(--text); line-height: 1.4; }
+  .note-box.includes .note-list li::before { content: '✓'; color: var(--green2); font-weight: 900; flex-shrink: 0; }
+  .note-box.excludes .note-list li::before { content: '✗'; color: #FF9A5C; font-weight: 900; flex-shrink: 0; }
+
+  .notes-special-box { background: #f5f0ff; border: 1px solid #c4b5fd; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 2rem; }
+  .notes-special-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #6d28d9; margin-bottom: 0.6rem; }
+  .notes-special-text { font-size: 0.82rem; color: #4c1d95; line-height: 1.7; white-space: pre-wrap; }
+
+  .terms-box { background: #fff8ee; border: 1px solid #ffd9a8; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 2.5rem; }
+  .terms-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #b05000; margin-bottom: 0.6rem; }
+  .terms-box p { font-size: 0.78rem; color: #7a4010; line-height: 1.7; white-space: pre-wrap; }
+
+  .cta-banner { background: var(--grad); padding: 1.4rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .cta-text strong { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: white; display: block; }
+  .cta-text span { font-size: 0.78rem; color: rgba(255,255,255,0.8); }
+  .cta-wa { background: white; color: var(--green); border: none; border-radius: 50px; padding: 0.7rem 1.5rem; font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 900; cursor: pointer; text-decoration: none; display: inline-block; }
+
+  .validity-strip { background: var(--grad); text-align: center; padding: 0.55rem; font-size: 0.75rem; font-weight: 900; color: white; letter-spacing: 0.08em; text-transform: uppercase; }
+  .footer { background: #0A1F14; padding: 1.6rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-brand { font-family: 'Playfair Display', serif; color: var(--gold2); font-size: 1.1rem; }
+  .footer-contact p { font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 2; text-align: right; }
+  .footer-contact span { color: rgba(255,255,255,0.9); font-weight: 700; }
+
+  @media print { body { background: white; padding: 0; } .page { box-shadow: none; border-radius: 0; } .print-bar, .cta-banner { display: none; } }
+  @media (max-width: 620px) { .content, .header { padding: 1.5rem; } .client-section, .notes-grid, .package-grid, .extras-grid { grid-template-columns: 1fr; } .header-title { font-size: 1.6rem; } .footer { flex-direction: column; text-align: center; } .footer-contact p { text-align: center; } }
+</style>
+</head>
+<body>
+<div class="print-bar"><button class="btn-print" onclick="window.print()">🖨️ Guardar / Imprimir</button></div>
+
+<div class="page">
+  <div class="header">
+    <div class="header-top">
+      <div class="logo-brand">
+        <div class="logo-wrap"><img src="logo.png" alt="Magia y Viaja" /></div>
+        <div>
+          <div class="brand-name">Magia y Viaja</div>
+          <div class="brand-sub">Agencia de Viajes Especializada</div>
+        </div>
+      </div>
+      <div class="quote-badge">
+        <div class="quote-label">Cotización Nº</div>
+        <div class="quote-number" id="v-quoteNum">#HTL-2026-</div>
+      </div>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Paquete <em>Hotel & Vacaciones</em> 🌴✨</div>
+    <div class="header-meta">
+      <div><span class="meta-label">Fecha de cotización</span><div class="meta-val" id="v-quoteDate">—</div></div>
+      <div><span class="meta-label">Válida hasta</span><div class="meta-val" id="v-validDate">—</div></div>
+      <div><span class="meta-label">Asesor(a)</span><div class="meta-val" id="v-agentName">—</div></div>
+    </div>
+  </div>
+
+  <div class="dest-strip">
+    <div class="dest-icon">📍</div>
+    <span class="destination-tag">Destino</span>
+    <span class="destination-name" id="v-destination">—</span>
+  </div>
+
+  <div class="content">
+    <div class="client-section">
+      <div class="info-card">
+        <div class="info-card-title">🧑‍🤝‍🧑 Datos del Viajero</div>
+        <div class="info-row"><span class="info-key">Nombre completo</span><span class="rv" id="v-clientName">—</span></div>
+        <div class="info-row"><span class="info-key">WhatsApp</span><span class="rv" id="v-clientPhone">—</span></div>
+        <div class="info-row"><span class="info-key">Adultos</span><span class="rv" id="v-numAdults">—</span></div>
+        <div class="info-row"><span class="info-key">Niños</span><span class="rv" id="v-numKids">—</span></div>
+        <div class="info-row"><span class="info-key">Edades de los niños</span><span class="rv" id="v-kidsAges">—</span></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🗓️ Detalles del Viaje</div>
+        <div class="info-row"><span class="info-key">Fecha de llegada</span><span class="rv" id="v-arrivalDate">—</span></div>
+        <div class="info-row"><span class="info-key">Fecha de salida</span><span class="rv" id="v-departDate">—</span></div>
+        <div class="info-row"><span class="info-key">Noches / Días</span><span class="rv" id="v-duration">—</span></div>
+        <div class="info-row"><span class="info-key">Hotel(es)</span><span style="font-size:0.75rem;color:var(--muted);font-style:italic;">Ver opciones abajo</span></div>
+      </div>
+    </div>
+
+    <div class="section-header"><div class="section-dot"></div><h3>Detalle del Paquete</h3></div>
+
+    <!-- HOTEL OPTIONS -->
+    <div style="background:var(--grad-soft);border:2px solid var(--border);border-radius:16px;padding:1.4rem;margin-bottom:1.2rem;">
+      <div style="font-family:Playfair Display,serif;font-size:1rem;color:var(--green);margin-bottom:1rem;">🏨 Opciones de Hotel — elige tu favorita</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+
+        <div class="pkg-card core" style="position:relative;">
+          <span class="pkg-badge badge-included">Opción 1</span>
+          <div class="pkg-icon">🏨</div>
+          <div class="pkg-name" id="v-hotelName">—</div>
+          <div class="pkg-desc">
+            <span id="v-hotelStars"></span><br>
+            <span id="v-roomType"></span><br>
+            <span id="v-mealPlan"></span><br>
+            <span style="font-size:0.72rem;color:var(--muted);" id="v-hotelAddress"></span>
+          </div>
+          <div class="pkg-price-label" style="margin-top:0.8rem;">Precio total</div>
+          <div class="pkg-price-val" id="v-priceHotel">$ —</div>
+        </div>
+
+        <div class="pkg-card optional" id="card-hotel2" style="position:relative;display:none;">
+          <span class="pkg-badge badge-optional">Opción 2</span>
+          <div class="pkg-icon">🏨</div>
+          <div class="pkg-name" id="v-hotelName2">—</div>
+          <div class="pkg-desc">
+            <span id="v-hotelStars2"></span><br>
+            <span id="v-roomType2"></span><br>
+            <span id="v-mealPlan2"></span><br>
+            <span style="font-size:0.72rem;color:var(--muted);" id="v-hotelAddress2"></span>
+          </div>
+          <div class="pkg-price-label" style="margin-top:0.8rem;">Precio total</div>
+          <div class="pkg-price-val" id="v-priceHotel2">$ —</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="package-grid">
+      <div style="display:none;"></div>
+      <div class="pkg-card optional" id="card-flights" style="display:none;">
+        <span class="pkg-badge badge-included">✓ Incluido</span>
+        <div class="pkg-icon">✈️</div>
+        <div class="pkg-name">Vuelos</div>
+        <div class="pkg-desc" id="v-flightsDesc">—</div>
+        <div class="pkg-price-label">Precio total</div>
+        <div class="pkg-price-val" id="v-priceFlights">$ —</div>
+      </div>
+      <div class="pkg-card optional" id="card-transfers" style="display:none;">
+        <span class="pkg-badge badge-included">✓ Incluido</span>
+        <div class="pkg-icon">🚌</div>
+        <div class="pkg-name">Traslados</div>
+        <div class="pkg-desc" id="v-transferType">—</div>
+        <div class="pkg-price-label">Precio total</div>
+        <div class="pkg-price-val" id="v-priceTransfers">$ —</div>
+      </div>
+    </div>
+
+    <!-- CAR + ATTRACTIONS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:2.5rem;">
+      <div class="pkg-card optional" id="card-car" style="display:none;">
+        <span class="pkg-badge badge-included">✓ Incluido</span>
+        <div class="pkg-icon">🚗</div>
+        <div class="pkg-name">Renta de Auto</div>
+        <div class="pkg-desc" id="v-carDesc">—</div>
+        <div class="pkg-price-label">Precio total</div>
+        <div class="pkg-price-val" id="v-priceCar">$ —</div>
+      </div>
+      <div class="pkg-card optional" id="card-attractions" style="display:none;">
+        <span class="pkg-badge badge-included">✓ Incluido</span>
+        <div class="pkg-icon">🎡</div>
+        <div class="pkg-name">Entradas a Atracciones</div>
+        <div class="pkg-desc">Ver detalle abajo</div>
+        <div class="pkg-price-label">Precio total</div>
+        <div class="pkg-price-val" id="v-priceAttrTotal">$ —</div>
+      </div>
+    </div>
+
+    <!-- TOURS -->
+    <div class="tours-section" id="toursSection" style="display:none;">
+      <div class="tours-title">🗺️ Tours y Actividades Incluidos</div>
+      <div id="v-toursList"></div>
+    </div>
+
+    <!-- ATTRACTIONS LIST -->
+    <div class="tours-section" id="attractionsSection" style="display:none;margin-bottom:1.5rem;">
+      <div class="tours-title">🎡 Entradas a Atracciones</div>
+      <div id="v-attractionsList"></div>
+    </div>
+
+    <!-- EXTRAS -->
+    <div class="extras-section">
+      <div class="extras-header">
+        <div class="extras-icon">✨</div>
+        <div>
+          <div class="extras-title">Extras Opcionales</div>
+          <div class="extras-subtitle">Marca los extras que quieras agregar a tu paquete</div>
+        </div>
+      </div>
+      <div class="extras-grid">
+        <div class="extra-option" id="opt-ins">
+          <div class="extra-check"><input type="checkbox" id="cb-ins" onchange="toggleExtra('ins')" /><label for="cb-ins">🛡️ Seguro de Viaje</label></div>
+          <div class="extra-detail">Cobertura médica, cancelación y equipaje. Asistencia 24/7 en destino.</div>
+          <div class="extra-price-sublabel">Precio por paquete</div>
+          <div class="extra-price-display" id="v-priceIns">$ —</div>
+        </div>
+        <div class="extra-option" id="opt-extra1" style="display:none;">
+          <div class="extra-check"><input type="checkbox" id="cb-extra1" onchange="toggleExtra('extra1')" /><label for="cb-extra1" id="v-extra1Name">Extra adicional</label></div>
+          <div class="extra-detail"></div>
+          <div class="extra-price-sublabel">Precio por paquete</div>
+          <div class="extra-price-display" id="v-priceExtra1">$ —</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="totals-section">
+      <div class="totals-box">
+        <div class="total-row"><span class="label">Hospedaje</span><span class="calc-amount" id="t-hotel">$ —</span></div>
+        <div class="total-row" id="row-flights" style="display:none;"><span class="label">Vuelos</span><span class="calc-amount" id="t-flights">$ —</span></div>
+        <div class="total-row" id="row-transfers" style="display:none;"><span class="label">Traslados</span><span class="calc-amount" id="t-transfers">$ —</span></div>
+        <div id="toursTotalRows"></div>
+        <div class="total-row" id="row-car" style="display:none;"><span class="label">Renta de auto</span><span class="calc-amount" id="t-car">$ —</span></div>
+        <div id="attrsTotalRows"></div>
+        <div class="total-row" id="row-ins" style="display:none;"><span class="label">Seguro de viaje</span><span class="calc-amount" id="t-ins">$ 0.00</span></div>
+        <div class="total-row" id="row-extra1" style="display:none;"><span class="label" id="label-extra1">Extra</span><span class="calc-amount" id="t-extra1">$ 0.00</span></div>
+        <div class="total-row" id="row-disc" style="display:none;"><span class="label">Descuento</span><span class="calc-amount" id="t-disc">$ —</span></div>
+        <div class="total-row divider grand"><span class="label">TOTAL</span><span class="calc-total" id="t-total">$ —</span></div>
+        <div class="per-person-note" id="t-per-person"></div>
+      </div>
+    </div>
+
+    <div class="notes-grid">
+      <div class="note-box includes">
+        <div class="note-box-title">✅ El paquete incluye</div>
+        <ul class="note-list">
+          <li>Hospedaje según noches cotizadas</li>
+          <li id="li-mealplan"></li>
+          <li id="li-flights" style="display:none;">Vuelos según itinerario</li>
+          <li id="li-transfers" style="display:none;">Traslados aeropuerto ↔ hotel</li>
+          <li id="li-car" style="display:none;">Renta de auto incluida</li>
+          <li id="li-attractions" style="display:none;">Entradas a atracciones</li>
+          <li>Asesoría y acompañamiento 24/7 de Magia y Viaja</li>
+        </ul>
+      </div>
+      <div class="note-box excludes">
+        <div class="note-box-title">❌ No incluye</div>
+        <ul class="note-list">
+          <li id="li-no-flights">Vuelos (se pueden agregar)</li>
+          <li>Gastos personales y souvenirs</li>
+          <li>Trámite de visa (si aplica)</li>
+          <li>Propinas y extras en hotel</li>
+          <li>Actividades no mencionadas</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-special-box" id="notesWrap" style="display:none;">
+      <div class="notes-special-title">📝 Notas Especiales</div>
+      <p class="notes-special-text" id="v-specialNotes"></p>
+    </div>
+
+    <div class="terms-box">
+      <div class="terms-title">⚠️ Condiciones y Política de Pago</div>
+      <p id="v-termsText"></p>
+    </div>
+  </div>
+
+  <div class="cta-banner">
+    <div class="cta-text">
+      <strong>¿Listo para tu viaje? 🌴</strong>
+      <span>Escríbenos para confirmar tu reservación</span>
+    </div>
+    <a class="cta-wa" href="https://wa.me/18636046310" target="_blank">💬 Escribir por WhatsApp</a>
+  </div>
+
+  <div class="validity-strip">✦ Cotización válida por 3 días a partir de la fecha de emisión — Magia y Viaja ✦</div>
+  <div class="footer">
+    <div class="footer-brand">✦ Magia y Viaja</div>
+    <div class="footer-contact"><p>📱 WhatsApp: <span>+1 863 604 6310</span><br>Instagram: <span>@magiayviaja</span></p></div>
+  </div>
+</div>
+
+<script>
+  const D = {};
+  try {
+    const raw = new URLSearchParams(window.location.search).get('d');
+    if (raw) { try { Object.assign(D, JSON.parse(atob(raw))); } catch(e) { console.error(e); } }
+  } catch(e) {}
+
+  function fmtDate(s) { if (!s) return '—'; const [y,m,d] = s.split('-'); return d+'/'+m+'/'+y; }
+  function fmtMoney(v) { const n = parseFloat(v)||0; return '$ ' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function stars(n) { return n ? '⭐'.repeat(parseInt(n)) : '—'; }
+
+  document.getElementById('v-quoteNum').textContent    = '#HTL-2026-' + (D.quoteNum||'');
+  document.getElementById('v-quoteDate').textContent   = fmtDate(D.quoteDate);
+  document.getElementById('v-validDate').textContent   = fmtDate(D.validDate);
+  document.getElementById('v-agentName').textContent   = D.agentName   || '—';
+  document.getElementById('v-destination').textContent = D.destination  || '—';
+  document.getElementById('v-clientName').textContent  = D.clientName  || '—';
+  document.getElementById('v-clientPhone').textContent = D.clientPhone || '—';
+  document.getElementById('v-numAdults').textContent   = D.numAdults   || '—';
+  document.getElementById('v-numKids').textContent     = D.numKids     || '—';
+  document.getElementById('v-kidsAges').textContent    = D.kidsAges    || '—';
+  document.getElementById('v-arrivalDate').textContent = fmtDate(D.arrivalDate);
+  document.getElementById('v-departDate').textContent  = fmtDate(D.departDate);
+  document.getElementById('v-duration').textContent    = D.duration    || '—';
+  document.getElementById('v-hotelName').textContent   = D.hotelName   || '—';
+  document.getElementById('v-hotelStars').textContent  = stars(D.hotelStars);
+  document.getElementById('v-roomType').textContent    = D.roomType    || '—';
+  document.getElementById('v-mealPlan').textContent    = D.mealPlan    || '—';
+  // Hotel 2
+  if (D.hotel2Included === true || D.hotel2Included === 'true') {
+    document.getElementById('card-hotel2').style.display = '';
+    document.getElementById('v-hotelName2').textContent  = D.hotelName2  || '—';
+    document.getElementById('v-hotelStars2').textContent = stars(D.hotelStars2);
+    document.getElementById('v-roomType2').textContent   = D.roomType2   || '—';
+    document.getElementById('v-mealPlan2').textContent   = D.mealPlan2   || '—';
+    document.getElementById('v-priceHotel2').textContent = fmtMoney(D.priceHotel2);
+    if (D.hotelAddress2) document.getElementById('v-hotelAddress2').textContent = '📍 ' + D.hotelAddress2;
+  }
+  document.getElementById('v-priceHotel').textContent  = fmtMoney(D.priceHotel);
+  if (D.hotelAddress) document.getElementById('v-hotelAddress').textContent = '📍 ' + D.hotelAddress;
+  document.getElementById('t-hotel').textContent       = fmtMoney(D.priceHotel);
+  document.getElementById('v-priceIns').textContent    = fmtMoney(D.priceIns);
+
+  if (D.mealPlan) document.getElementById('li-mealplan').textContent = D.mealPlan;
+
+  // Flights
+  if (D.flightsIncluded === true || D.flightsIncluded === 'true') {
+    document.getElementById('card-flights').style.display = '';
+    document.getElementById('v-flightsDesc').textContent  = D.flightsDesc || 'Vuelo redondo';
+    document.getElementById('v-priceFlights').textContent = fmtMoney(D.priceFlights);
+    document.getElementById('row-flights').style.display  = '';
+    document.getElementById('t-flights').textContent      = fmtMoney(D.priceFlights);
+    document.getElementById('li-flights').style.display   = '';
+    document.getElementById('li-no-flights').style.display = 'none';
+  }
+
+  // Transfers
+  if (D.transfersIncluded === true || D.transfersIncluded === 'true') {
+    document.getElementById('card-transfers').style.display  = '';
+    document.getElementById('v-transferType').textContent    = D.transferType || 'Aeropuerto ↔ Hotel';
+    document.getElementById('v-priceTransfers').textContent  = fmtMoney(D.priceTransfers);
+    document.getElementById('row-transfers').style.display   = '';
+    document.getElementById('t-transfers').textContent       = fmtMoney(D.priceTransfers);
+    document.getElementById('li-transfers').style.display    = '';
+  }
+
+  // Car rental
+  if (D.carIncluded === true || D.carIncluded === 'true') {
+    document.getElementById('card-car').style.display = '';
+    document.getElementById('v-carDesc').textContent  = (D.carType || '') + (D.carDays ? ' · ' + D.carDays + ' días' : '');
+    document.getElementById('v-priceCar').textContent = fmtMoney(D.priceCar);
+    document.getElementById('row-car').style.display  = '';
+    document.getElementById('t-car').textContent      = fmtMoney(D.priceCar);
+    document.getElementById('li-car').style.display   = '';
+  }
+
+  // Attractions
+  if (D.attractionsIncluded === true || D.attractionsIncluded === 'true') {
+    try {
+      const attrs = JSON.parse(D.attractions);
+      const validAttrs = attrs.filter(a => a.name || parseFloat(a.price) > 0);
+      if (validAttrs.length > 0) {
+        document.getElementById('card-attractions').style.display = '';
+        document.getElementById('attractionsSection').style.display = '';
+        document.getElementById('li-attractions').style.display = '';
+        const list = document.getElementById('v-attractionsList');
+        const totalsContainer = document.getElementById('attrsTotalRows');
+        let attrsTotal = 0;
+        validAttrs.forEach(a => {
+          const el = document.createElement('div');
+          el.className = 'tour-item';
+          el.innerHTML = '<span class="tour-item-name">' + (a.name||'Atracción') + '</span><span class="tour-item-price">' + fmtMoney(a.price) + '</span>';
+          list.appendChild(el);
+          const tr = document.createElement('div');
+          tr.className = 'total-row';
+          tr.innerHTML = '<span class="label">' + (a.name||'Atracción') + '</span><span class="calc-amount">' + fmtMoney(a.price) + '</span>';
+          totalsContainer.appendChild(tr);
+          attrsTotal += parseFloat(a.price)||0;
+        });
+        document.getElementById('v-priceAttrTotal').textContent = fmtMoney(attrsTotal);
+      }
+    } catch(e) {}
+  }
+
+  // Tours
+  if (D.tours) {
+    try {
+      const tours = JSON.parse(D.tours);
+      const validTours = tours.filter(t => t.name || parseFloat(t.price) > 0);
+      if (validTours.length > 0) {
+        document.getElementById('toursSection').style.display = '';
+        const list = document.getElementById('v-toursList');
+        const totalsContainer = document.getElementById('toursTotalRows');
+        validTours.forEach(t => {
+          const el = document.createElement('div');
+          el.className = 'tour-item';
+          el.innerHTML = '<span class="tour-item-name">' + (t.name||'Tour') + '</span><span class="tour-item-price">' + fmtMoney(t.price) + '</span>';
+          list.appendChild(el);
+          const tr = document.createElement('div');
+          tr.className = 'total-row';
+          tr.innerHTML = '<span class="label">' + (t.name||'Tour') + '</span><span class="calc-amount">' + fmtMoney(t.price) + '</span>';
+          totalsContainer.appendChild(tr);
+        });
+      }
+    } catch(e) {}
+  }
+
+  // Extra1
+  if (D.extra1Name) {
+    document.getElementById('opt-extra1').style.display = '';
+    document.getElementById('v-extra1Name').textContent = D.extra1Name;
+    document.getElementById('label-extra1').textContent = D.extra1Name;
+    document.getElementById('v-priceExtra1').textContent = fmtMoney(D.priceExtra1);
+  }
+
+  // Discount
+  if (D.discount && parseFloat(D.discount) > 0) {
+    document.getElementById('row-disc').style.display = '';
+    document.getElementById('t-disc').textContent = '− ' + fmtMoney(D.discount);
+  }
+
+  // Special notes
+  if (D.specialNotes) {
+    document.getElementById('v-specialNotes').textContent = D.specialNotes;
+    document.getElementById('notesWrap').style.display = '';
+  }
+
+  // Terms
+  document.getElementById('v-termsText').textContent = D.termsText || '';
+
+  // Base total
+  const hotel     = parseFloat(D.priceHotel)||0;
+  const flights   = (D.flightsIncluded === true || D.flightsIncluded === 'true')   ? (parseFloat(D.priceFlights)||0)   : 0;
+  const transfers = (D.transfersIncluded === true || D.transfersIncluded === 'true') ? (parseFloat(D.priceTransfers)||0) : 0;
+  const disc      = parseFloat(D.discount)||0;
+  const pax       = (parseInt(D.numAdults)||0) + (parseInt(D.numKids)||0);
+  let toursBase   = 0;
+  const carBase = (D.carIncluded === true || D.carIncluded === 'true') ? (parseFloat(D.priceCar)||0) : 0;
+  let attrsBase = 0;
+  if (D.attractionsIncluded === true || D.attractionsIncluded === 'true') { try { JSON.parse(D.attractions).forEach(a => { attrsBase += parseFloat(a.price)||0; }); } catch(e) {} }
+  if (D.tours) { try { JSON.parse(D.tours).forEach(t => { toursBase += parseFloat(t.price)||0; }); } catch(e) {} }
+
+  const baseTotal = Math.max(0, hotel + flights + transfers + toursBase + carBase + attrsBase - disc);
+  document.getElementById('t-total').textContent = fmtMoney(baseTotal);
+  if (pax > 0 && baseTotal > 0) document.getElementById('t-per-person').textContent = '≈ ' + fmtMoney(baseTotal/pax) + ' por persona';
+
+  // Extras interactive
+  const indExtras = { ins: false, extra1: false };
+  function toggleExtra(type) {
+    indExtras[type] = document.getElementById('cb-' + type).checked;
+    document.getElementById('opt-' + type).classList.toggle('selected', indExtras[type]);
+    recalc();
+  }
+  function recalc() {
+    const insAmt    = indExtras.ins    ? (parseFloat(D.priceIns)||0)    : 0;
+    const extra1Amt = indExtras.extra1 ? (parseFloat(D.priceExtra1)||0) : 0;
+    const total = Math.max(0, hotel + flights + transfers + toursBase + carBase + attrsBase + insAmt + extra1Amt - disc);
+    document.getElementById('t-ins').textContent    = fmtMoney(insAmt);
+    document.getElementById('t-extra1').textContent = fmtMoney(extra1Amt);
+    document.getElementById('t-total').textContent  = fmtMoney(total);
+    document.getElementById('row-ins').style.display    = indExtras.ins    ? '' : 'none';
+    document.getElementById('row-extra1').style.display = indExtras.extra1 ? '' : 'none';
+    document.getElementById('t-per-person').textContent = pax > 0 && total > 0 ? '≈ ' + fmtMoney(total/pax) + ' por persona' : '';
+  }
+</script>
+</body>
+</html>
