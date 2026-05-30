@@ -657,6 +657,17 @@
   }
 
   // ── GENERATE CLIENT LINK ──
+  function recopilarAtracciones() {
+    const a = [];
+    document.querySelectorAll('[id^="attr-"]').forEach(function(r) {
+      const i = r.id.split('-')[1];
+      const nameEl = document.getElementById('attrName' + i);
+      const priceEl = document.getElementById('attrPrice' + i);
+      a.push({ name: nameEl ? nameEl.value : '', price: priceEl ? priceEl.value : '0' });
+    });
+    return JSON.stringify(a);
+  }
+
   function recopilarDatos() {
     const tours = [];
     document.querySelectorAll('[id^="tour-"]').forEach(row => {
@@ -702,7 +713,7 @@
       carDays:      document.getElementById('carDays').value,
       priceCar:     document.getElementById('priceCar').value,
       attractionsIncluded: attractionsIncluded,
-      attractions:  JSON.stringify((() => { const a = []; document.querySelectorAll('[id^="attr-"]').forEach(r => { const i = r.id.split('-')[1]; a.push({name: document.getElementById('attrName'+i)?.value||'', price: document.getElementById('attrPrice'+i)?.value||'0'}); }); return a; })()),
+      attractions:  recopilarAtracciones(),
       priceTransfers: document.getElementById('priceTransfers').value,
       tours:        JSON.stringify(tours),
       priceIns:     document.getElementById('priceIns').value,
