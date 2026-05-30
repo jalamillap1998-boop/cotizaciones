@@ -718,14 +718,18 @@
 
   let generatedUrl = '';
   function generarClienteLink() {
-    const datos = recopilarDatos();
-    const json  = JSON.stringify(datos);
-    const b64   = btoa(encodeURIComponent(json).replace(/%([0-9A-F]{2})/g, (m,p1) => String.fromCharCode('0x'+p1)));
-    const base  = window.location.href.replace('hotel-quote-AGENTE.html','').replace(/\?.*$/,'');
-    generatedUrl = base + 'hotel-quote-CLIENTE.html?d=' + b64;
-    document.getElementById('modal').classList.add('active');
-    document.getElementById('copyMsg').style.display = 'none';
-    document.getElementById('linkDisplay').value = generatedUrl;
+    try {
+      const datos = recopilarDatos();
+      const json  = JSON.stringify(datos);
+      const b64   = btoa(unescape(encodeURIComponent(json)));
+      const base  = window.location.href.replace('hotel-quote-AGENTE.html','').replace(/\?.*$/,'');
+      generatedUrl = base + 'hotel-quote-CLIENTE.html?d=' + b64;
+      document.getElementById('modal').classList.add('active');
+      document.getElementById('copyMsg').style.display = 'none';
+      document.getElementById('linkDisplay').value = generatedUrl;
+    } catch(e) {
+      alert('Error al generar link: ' + e.message);
+    }
   }
   function copiarLink() {
     navigator.clipboard.writeText(generatedUrl).then(() => {
