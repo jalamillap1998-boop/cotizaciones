@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotización Universal – Magia y Viaja [AGENTE]</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0047AB;
+    --blue2: #0066CC;
+    --blue3: #004499;
+    --yellow: #FFD700;
+    --grad: linear-gradient(135deg, #0047AB 0%, #0066CC 55%, #00AAFF 100%);
+    --grad-soft: linear-gradient(135deg, #f0f6ff 0%, #e8f4ff 100%);
+    --white: #FFFFFF;
+    --soft: #F0F6FF;
+    --text: #0A1628;
+    --muted: #5A6A8A;
+    --border: #C5D8F0;
+    --sky: #E0EFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #002266 0%, #0047AB 55%, #0088CC 100%);
+    min-height: 100vh;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 2rem 1rem 6rem;
+  }
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: #001133;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.7rem 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  .top-bar-label { font-size: 0.78rem; font-weight: 900; color: var(--yellow); letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; gap: 0.5rem; }
+  .top-bar-label span { color: rgba(255,255,255,0.5); font-weight: 400; }
+  .top-bar-btns { display: flex; gap: 0.75rem; }
+  .btn { border: none; border-radius: 50px; padding: 0.55rem 1.3rem; font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 900; cursor: pointer; transition: transform 0.15s; letter-spacing: 0.03em; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-share { background: var(--grad); color: white; box-shadow: 0 3px 14px rgba(0,71,171,0.5); }
+  .btn-print { background: rgba(255,255,255,0.12); color: white; }
+
+  .page { position: relative; z-index: 1; background: var(--white); width: 100%; max-width: 880px; border-radius: 24px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.35); margin-top: 3.5rem; animation: fadeUp 0.8s ease forwards; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+  .f { background: rgba(0,71,171,0.07); border: 1.5px dashed rgba(0,71,171,0.35); border-radius: 6px; padding: 3px 8px; font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text); outline: none; transition: background 0.15s, border-color 0.15s; min-width: 120px; }
+  .f:focus { background: rgba(0,71,171,0.13); border-color: var(--blue); border-style: solid; }
+  .f.wide { min-width: 200px; } .f.narrow { min-width: 55px; }
+  .f.money { min-width: 90px; font-family: 'Playfair Display', serif; font-size: 0.95rem; }
+  .f.light { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); color: white; }
+  .f.light:focus { background: rgba(255,255,255,0.3); border-color: white; border-style: solid; }
+  .f.light::placeholder { color: rgba(255,255,255,0.5); font-style: italic; font-weight: 400; }
+  .f::placeholder { color: rgba(90,106,138,0.5); font-style: italic; font-weight: 400; }
+  select.f { cursor: pointer; }
+
+  /* HEADER */
+  .header { background: var(--grad); padding: 2rem 3rem 1.8rem; position: relative; overflow: hidden; }
+  .header::after { content: ''; position: absolute; right: -30px; top: -30px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.05); pointer-events: none; }
+  .header-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .logo-wrap img { height: 90px; width: 90px; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.15); padding: 4px; }
+  .logo-brand { display: flex; align-items: center; gap: 1rem; }
+  .brand-name { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2); line-height: 1; }
+  .brand-sub { font-size: 0.7rem; color: rgba(255,255,255,0.75); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
+  .quote-badge { text-align: right; }
+  .quote-label { font-size: 0.65rem; color: rgba(255,255,255,0.65); letter-spacing: 0.15em; text-transform: uppercase; }
+  .quote-number { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: white; display: flex; align-items: center; gap: 4px; justify-content: flex-end; }
+  .quote-number span { color: rgba(255,255,255,0.6); }
+  .header-divider { height: 1px; background: rgba(255,255,255,0.3); margin: 1.2rem 0 1rem; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: white; line-height: 1.1; text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .header-title em { color: var(--yellow); font-style: normal; }
+  .header-meta { display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; align-items: flex-end; }
+  .meta-label { font-size: 0.62rem; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 3px; }
+
+  /* PARK STRIP */
+  .park-strip { background: var(--grad-soft); padding: 0.9rem 3rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .park-icon { font-size: 1.8rem; }
+  .destination-tag { background: var(--grad); color: white; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; }
+  .destination-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); font-style: italic; }
+
+  .content { padding: 2.5rem 3rem; background: var(--white); }
+  .client-section { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+  .info-card { background: var(--soft); border-radius: 14px; padding: 1.4rem; border: 1px solid var(--sky); }
+  .info-card-title { font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px dashed rgba(0,0,0,0.06); gap: 0.5rem; }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+  .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.2rem; }
+  .section-header h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--text); }
+  .section-dot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; flex-shrink: 0; }
+
+  /* PACKAGE CARDS */
+  .package-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 2.5rem; }
+  .pkg-card { border-radius: 14px; border: 2px solid var(--border); padding: 1.3rem 1.2rem; position: relative; }
+  .pkg-card.core { background: #f0f6ff; border-color: #90b8f0; }
+  .pkg-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .pkg-name { font-weight: 800; font-size: 0.9rem; color: var(--text); margin-bottom: 0.3rem; }
+  .pkg-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.8rem; }
+  .pkg-price-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 3px; }
+  .pkg-badge { position: absolute; top: -10px; right: 14px; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 20px; }
+  .badge-included { background: #dbeafe; color: #1e40af; }
+
+  /* TICKET TYPE */
+  .ticket-section { background: var(--grad-soft); border: 2px solid var(--border); border-radius: 16px; padding: 1.4rem; margin-bottom: 2.5rem; }
+  .ticket-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--blue); margin-bottom: 1rem; }
+  .ticket-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .ticket-option { background: white; border-radius: 10px; padding: 0.9rem 1rem; border: 2px solid var(--border); }
+  .ticket-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+  .ticket-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+
+  /* EXTRAS */
+  .extras-section { background: linear-gradient(135deg, #f0f6ff 0%, #e8f8ff 100%); border: 2px solid #90b8f0; border-radius: 16px; padding: 1.6rem; margin-bottom: 2.5rem; }
+  .extras-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.4rem; }
+  .extras-icon { font-size: 1.8rem; }
+  .extras-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--blue3); }
+  .extras-subtitle { font-size: 0.75rem; color: var(--muted); }
+  .extras-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .extra-option { background: white; border-radius: 10px; padding: 1rem; border: 2px solid #90b8f0; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+  .extra-option.selected { border-color: var(--blue); background: #ebf3ff; }
+  .extra-check { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .extra-check input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--blue); cursor: pointer; }
+  .extra-check label { font-size: 0.85rem; font-weight: 800; color: var(--blue3); cursor: pointer; }
+  .extra-detail { font-size: 0.73rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.5rem; }
+  .extra-price-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem; }
+  .extra-price-label { font-size: 0.65rem; color: var(--muted); }
+
+  /* EXPRESS PASS NOTE */
+  .ep-note { background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 0.6rem 0.9rem; font-size: 0.72rem; color: #7a5800; margin-top: 1rem; }
+
+  /* TOTALS */
+  .totals-section { display: flex; justify-content: flex-end; margin-bottom: 2.5rem; }
+  .totals-box { background: var(--soft); border-radius: 14px; padding: 1.4rem 2rem; min-width: 310px; border: 1px solid var(--sky); }
+  .total-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; font-size: 0.85rem; }
+  .total-row .label { color: var(--muted); }
+  .total-row.divider { border-top: 1.5px solid var(--border); margin-top: 0.5rem; padding-top: 0.9rem; }
+  .total-row.grand .label { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text); }
+  .calc-amount { font-weight: 800; color: var(--text); font-size: 0.9rem; }
+  .calc-total { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--blue); font-weight: 700; }
+  .per-person-note { font-size: 0.7rem; color: var(--muted); text-align: right; margin-top: 4px; }
+
+  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .note-box { border-radius: 12px; padding: 1.2rem; border: 1px solid; }
+  .note-box.includes { background: #f0f6ff; border-color: #90b8f0; }
+  .note-box.excludes { background: #fff8ee; border-color: #ffd9a8; }
+  .note-box-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .note-box.includes .note-box-title { color: var(--blue3); }
+  .note-box.excludes .note-box-title { color: #b05000; }
+  .note-list { list-style: none; }
+  .note-list li { font-size: 0.8rem; padding: 0.22rem 0; display: flex; align-items: flex-start; gap: 0.5rem; color: var(--text); line-height: 1.4; }
+  .note-box.includes .note-list li::before { content: '✓'; color: var(--blue); font-weight: 900; flex-shrink: 0; }
+  .note-box.excludes .note-list li::before { content: '✗'; color: #FF9A5C; font-weight: 900; flex-shrink: 0; }
+
+  .notes-special-box { background: #f5f0ff; border: 1px solid #c4b5fd; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 2rem; }
+  .notes-special-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #6d28d9; margin-bottom: 0.6rem; }
+
+  .terms-box { background: #fff8ee; border: 1px solid #ffd9a8; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 2.5rem; }
+  .terms-title { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #b05000; margin-bottom: 0.6rem; }
+  .terms-box p { font-size: 0.78rem; color: #7a4010; line-height: 1.7; }
+
+  .validity-strip { background: var(--grad); text-align: center; padding: 0.55rem; font-size: 0.75rem; font-weight: 900; color: white; letter-spacing: 0.08em; text-transform: uppercase; }
+  .footer { background: #001133; padding: 1.6rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-brand { font-family: 'Playfair Display', serif; color: var(--yellow); font-size: 1.1rem; }
+  .footer-contact p { font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 2; text-align: right; }
+  .footer-contact span { color: rgba(255,255,255,0.9); font-weight: 700; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: white; border-radius: 20px; padding: 2rem; max-width: 420px; width: 90%; text-align: center; }
+  .modal h2 { font-family: 'Playfair Display', serif; color: var(--blue); margin-bottom: 0.5rem; }
+  .modal p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem; }
+  .modal-btns { display: flex; flex-direction: column; gap: 0.75rem; }
+  .btn-modal-copy { background: var(--grad); color: white; border: none; border-radius: 50px; padding: 0.8rem 1.5rem; font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 900; cursor: pointer; }
+  .btn-modal-close { background: none; border: 1.5px solid var(--border); border-radius: 50px; padding: 0.7rem 1.5rem; font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; color: var(--muted); }
+  .copy-success { display: none; color: var(--blue); font-weight: 800; font-size: 0.85rem; margin-top: 0.5rem; }
+
+  @media (max-width: 620px) {
+    .content, .header { padding: 1.5rem; }
+    .client-section, .notes-grid, .package-grid, .extras-grid, .ticket-grid { grid-template-columns: 1fr; }
+    .header-title { font-size: 1.6rem; }
+    .footer { flex-direction: column; text-align: center; }
+    .footer-contact p { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-label">✦ Modo Agente <span>— Universal Orlando</span></div>
+  <div class="top-bar-btns">
+    <button class="btn btn-print" onclick="window.print()">🖨️ Imprimir PDF</button>
+    <button class="btn btn-share" onclick="generarClienteLink()">✨ Generar link para cliente</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>¡Listo para compartir! 🎉</h2>
+    <p>Link generado para tu cliente. Solo puede ver los datos y marcar extras — no puede editar precios.</p>
+    <div class="modal-btns">
+      <button class="btn-modal-copy" onclick="copiarLink()">📋 Copiar link para cliente</button>
+      <div class="copy-success" id="copyMsg">✓ ¡Link copiado! Pégalo en WhatsApp</div>
+      <div style="margin-top:0.8rem;">
+        <p style="font-size:0.7rem;color:#8B6A5A;margin-bottom:4px;">O copia manualmente:</p>
+        <textarea id="linkDisplay" readonly style="width:100%;font-size:0.7rem;padding:6px;border-radius:8px;border:1px solid #C5D8F0;background:#F0F6FF;color:#0A1628;resize:none;height:60px;font-family:monospace;"></textarea>
+      </div>
+      <button class="btn-modal-close" onclick="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="logo-brand">
+        <div class="logo-wrap"><img src="logo.png" alt="Magia y Viaja" /></div>
+        <div>
+          <div class="brand-name">Magia y Viaja</div>
+          <div class="brand-sub">Agencia de Viajes Especializada</div>
+        </div>
+      </div>
+      <div class="quote-badge">
+        <div class="quote-label">Cotización Nº</div>
+        <div class="quote-number">
+          <span>#UNI-2026-</span>
+          <input class="f light narrow" id="quoteNum" type="text" placeholder="001" maxlength="6" style="min-width:52px;" />
+        </div>
+      </div>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">Paquete <em>Universal Orlando Resort</em> 🎢✨</div>
+    <div class="header-meta">
+      <div><span class="meta-label">Fecha de cotización</span><input class="f light" type="date" id="quoteDate" /></div>
+      <div><span class="meta-label">Válida hasta</span><input class="f light" type="date" id="validDate" /></div>
+      <div><span class="meta-label">Asesor(a)</span><input class="f light" type="text" id="agentName" placeholder="Tu nombre" /></div>
+    </div>
+  </div>
+
+  <div class="park-strip">
+    <div class="park-icon">🎢</div>
+    <span class="destination-tag">Destino</span>
+    <span class="destination-name">Universal Orlando Resort — Orlando, Florida, EE. UU.</span>
+  </div>
+
+  <div class="content">
+
+    <!-- CLIENT + TRIP -->
+    <div class="client-section">
+      <div class="info-card">
+        <div class="info-card-title">🧑‍🤝‍🧑 Datos del Viajero</div>
+        <div class="info-row"><span class="info-key">Nombre completo</span><input class="f wide" id="clientName" type="text" placeholder="Nombre del cliente" /></div>
+        <div class="info-row"><span class="info-key">WhatsApp</span><input class="f" id="clientPhone" type="tel" placeholder="+1 000 000 0000" /></div>
+        <div class="info-row"><span class="info-key">Adultos</span><input class="f narrow" id="numAdults" type="number" min="0" placeholder="0" oninput="recalc()" /></div>
+        <div class="info-row"><span class="info-key">Niños</span><input class="f narrow" id="numKids" type="number" min="0" placeholder="0" oninput="recalc()" /></div>
+        <div class="info-row"><span class="info-key">Edades de los niños</span><input class="f wide" id="kidsAges" type="text" placeholder="ej. 5, 8 años" /></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🗓️ Detalles del Viaje</div>
+        <div class="info-row"><span class="info-key">Fecha de llegada</span><input class="f" id="arrivalDate" type="date" /></div>
+        <div class="info-row"><span class="info-key">Fecha de salida</span><input class="f" id="departDate" type="date" /></div>
+        <div class="info-row"><span class="info-key">Noches / Días</span><input class="f" id="duration" type="text" placeholder="ej. 4 noches / 5 días" /></div>
+        <div class="info-row"><span class="info-key">Hotel Universal</span><input class="f wide" id="hotelName" type="text" placeholder="Nombre del resort" /></div>
+        <div class="info-row"><span class="info-key">Categoría del resort</span>
+          <select class="f" id="resortCategory">
+            <option value="">— Selecciona —</option>
+            <option value="Value">Value</option>
+            <option value="Prime Value">Prime Value</option>
+            <option value="Preferred">Preferred</option>
+            <option value="Prime">Prime</option>
+          </select>
+        </div>
+        <div class="info-row"><span class="info-key">Tipo de habitación</span><input class="f wide" id="roomType" type="text" placeholder="ej. Standard 2 Queen Beds" /></div>
+      </div>
+    </div>
+
+    <!-- PACKAGE CARDS -->
+    <div class="section-header"><div class="section-dot"></div><h3>Detalle del Paquete</h3></div>
+    <div class="package-grid">
+      <div class="pkg-card core">
+        <span class="pkg-badge badge-included">✓ Incluido</span>
+        <div class="pkg-icon">🏨</div>
+        <div class="pkg-name">Hospedaje en Resort Universal</div>
+        <div class="pkg-desc">Hotel oficial de Universal según categoría. Incluye Early Park Admission — entrada anticipada a los parques.</div>
+        <div class="pkg-price-label">Precio total del paquete</div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceHotel" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+      </div>
+      <div class="pkg-card core">
+        <span class="pkg-badge badge-included">✓ Incluido</span>
+        <div class="pkg-icon">🎟️</div>
+        <div class="pkg-name">Boletos de Parque</div>
+        <div class="pkg-desc">
+          <span style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;">Tipo de boleto</span>
+          <input class="f" id="ticketType" type="text" placeholder="ej. Park-to-Park 3 días" style="width:100%;min-width:unset;margin-bottom:6px;font-size:0.78rem;" />
+          <span style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;">Días de parque / persona</span>
+          <input class="f narrow" id="parkDays" type="number" min="1" placeholder="0" style="display:inline;min-width:40px;" />
+        </div>
+        <div class="pkg-price-label">Precio total del paquete</div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.85rem;color:var(--muted);">$</span><input class="f money" id="priceTickets" type="number" min="0" placeholder="0.00" oninput="recalc()" /></div>
+      </div>
+    </div>
+
+    <!-- EXTRAS -->
+    <div class="extras-section">
+      <div class="extras-header">
+        <div class="extras-icon">⚡</div>
+        <div>
+          <div class="extras-title">Extras Opcionales — Agregar al Paquete</div>
+          <div class="extras-subtitle">Precio por persona — selecciona los extras que deseas incluir</div>
+        </div>
+      </div>
+      <div class="extras-grid">
+        <div class="extra-option" id="opt-epl">
+          <div class="extra-check"><input type="checkbox" id="cb-epl" onchange="toggleExtra('epl')" /><label for="cb-epl">⚡ Express Pass</label></div>
+          <div class="extra-detail">Acceso rápido a las atracciones. Especifica el tipo exacto.</div>
+          <div style="margin-top:0.5rem;">
+            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-bottom:3px;">Tipo de Express Pass</span>
+            <input class="f" id="eplScope" type="text" placeholder="ej. 2-Park Express Unlimited 2 días" style="width:100%;min-width:unset;font-size:0.75rem;margin-bottom:6px;" onclick="event.stopPropagation()" />
+          </div>
+          <div class="extra-price-row"><span class="extra-price-label">Personas:</span><input class="f money narrow" id="qtyEPL" type="number" min="1" placeholder="0" oninput="recalc()" onclick="event.stopPropagation()" style="min-width:50px;" /></div>
+          <div class="extra-price-row"><span class="extra-price-label">$ / persona:</span><input class="f money narrow" id="priceEPL" type="number" min="0" placeholder="0.00" oninput="recalc()" onclick="event.stopPropagation()" /></div>
+        </div>
+
+        <div class="extra-option" id="opt-epu">
+          <div class="extra-check"><input type="checkbox" id="cb-epu" onchange="toggleExtra('epu')" /><label for="cb-epu">⚡ Express Pass 2</label></div>
+          <div class="extra-detail">Segunda opción de Express Pass si hay diferentes tipos en el grupo.</div>
+          <div style="margin-top:0.5rem;">
+            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-bottom:3px;">Tipo de Express Pass</span>
+            <input class="f" id="epuScope" type="text" placeholder="ej. 1-Park Express Pass Islands of Adventure" style="width:100%;min-width:unset;font-size:0.75rem;margin-bottom:6px;" onclick="event.stopPropagation()" />
+          </div>
+          <div class="extra-price-row"><span class="extra-price-label">Personas:</span><input class="f money narrow" id="qtyEPU" type="number" min="1" placeholder="0" oninput="recalc()" onclick="event.stopPropagation()" style="min-width:50px;" /></div>
+          <div class="extra-price-row"><span class="extra-price-label">$ / persona:</span><input class="f money narrow" id="priceEPU" type="number" min="0" placeholder="0.00" oninput="recalc()" onclick="event.stopPropagation()" /></div>
+        </div>
+
+        <div class="extra-option" id="opt-photos">
+          <div class="extra-check"><input type="checkbox" id="cb-photos" onchange="toggleExtra('photos')" /><label for="cb-photos">📸 My Universal Photos</label></div>
+          <div class="extra-detail">Fotos y videos ilimitados en atracciones y con personajes Universal durante toda la estadía.</div>
+          <div class="extra-price-row"><span class="extra-price-label">Precio por paquete: $</span><input class="f money narrow" id="pricePhotos" type="number" min="0" placeholder="0.00" oninput="recalc()" onclick="event.stopPropagation()" /></div>
+        </div>
+
+        <div class="extra-option" id="opt-ins">
+          <div class="extra-check"><input type="checkbox" id="cb-ins" onchange="toggleExtra('ins')" /><label for="cb-ins">🛡️ Seguro de Viaje</label></div>
+          <div class="extra-detail">Cobertura médica, cancelación y equipaje. Asistencia 24/7 durante toda la estadía.</div>
+          <div class="extra-price-row"><span class="extra-price-label">Precio por paquete: $</span><input class="f money narrow" id="priceIns" type="number" min="0" placeholder="0.00" oninput="recalc()" onclick="event.stopPropagation()" /></div>
+        </div>
+
+        <div class="extra-option" id="opt-vip">
+          <div class="extra-check"><input type="checkbox" id="cb-vip" onchange="toggleExtra('vip')" /><label for="cb-vip">👑 VIP Experience</label></div>
+          <div class="extra-detail">Experiencia VIP guiada con acceso especial a atracciones y áreas exclusivas.</div>
+          <div style="margin-top:0.5rem;">
+            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-bottom:3px;">Tipo de VIP Experience</span>
+            <input class="f" id="vipType" type="text" placeholder="ej. 2-Park VIP Experience 10:30 AM" style="width:100%;min-width:unset;font-size:0.75rem;margin-bottom:6px;" onclick="event.stopPropagation()" />
+            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-bottom:3px;">Fecha</span>
+            <input class="f" id="vipDate" type="date" style="width:100%;min-width:unset;font-size:0.75rem;margin-bottom:6px;" onclick="event.stopPropagation()" />
+          </div>
+          <div class="extra-price-row"><span class="extra-price-label">Precio por paquete: $</span><input class="f money narrow" id="priceVIP" type="number" min="0" placeholder="0.00" oninput="recalc()" onclick="event.stopPropagation()" /></div>
+        </div>
+      </div>
+
+      <div class="ep-note">⚠️ El Express Pass <strong>no aplica</strong> para Volcano Bay. Puedes agregar hasta 2 tipos distintos si el grupo necesita opciones diferentes.</div>
+    </div>
+
+    <!-- TOTALS -->
+    <div class="totals-section">
+      <div class="totals-box">
+        <div class="total-row"><span class="label">Hospedaje</span><span class="calc-amount" id="t-hotel">$ 0.00</span></div>
+        <div class="total-row"><span class="label">Boletos de parque</span><span class="calc-amount" id="t-tickets">$ 0.00</span></div>
+        <div class="total-row" id="row-epl" style="display:none;"><span class="label">Express Pass Limited</span><span class="calc-amount" id="t-epl">$ 0.00</span></div>
+        <div class="total-row" id="row-epu" style="display:none;"><span class="label">Express Pass Unlimited</span><span class="calc-amount" id="t-epu">$ 0.00</span></div>
+        <div class="total-row" id="row-photos" style="display:none;"><span class="label">My Universal Photos</span><span class="calc-amount" id="t-photos">$ 0.00</span></div>
+        <div class="total-row" id="row-ins" style="display:none;"><span class="label">Seguro de viaje</span><span class="calc-amount" id="t-ins">$ 0.00</span></div>
+        <div class="total-row" id="row-vip" style="display:none;"><span class="label">VIP Experience</span><span class="calc-amount" id="t-vip">$ 0.00</span></div>
+        <div class="total-row">
+          <span class="label">Descuento / Promoción</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="font-size:0.8rem;color:var(--muted);">− $</span><input class="f money narrow" id="discount" type="number" min="0" placeholder="0.00" oninput="recalc()" /></span>
+        </div>
+        <div class="total-row divider grand"><span class="label">TOTAL</span><span class="calc-total" id="t-total">$ 0.00</span></div>
+        <div class="per-person-note" id="t-per-person"></div>
+      </div>
+    </div>
+
+    <!-- INCLUDES / EXCLUDES -->
+    <div class="notes-grid">
+      <div class="note-box includes">
+        <div class="note-box-title">✅ El paquete incluye</div>
+        <ul class="note-list">
+          <li>Hospedaje en Resort oficial de Universal</li>
+          <li>Boletos de parque según días cotizados</li>
+          <li>Early Park Admission (entrada anticipada)</li>
+          <li>Acceso a los parques por <input class="f narrow" id="parksList" type="number" min="1" placeholder="0" style="display:inline;min-width:45px;font-size:0.78rem;" /> días</li>
+          <li>Transporte interno entre resorts Universal</li>
+          <li>Asesoría y acompañamiento 24/7 de Magia y Viaja</li>
+        </ul>
+      </div>
+      <div class="note-box excludes">
+        <div class="note-box-title">❌ No incluye</div>
+        <ul class="note-list">
+          <li>Vuelos y traslados al aeropuerto</li>
+          <li>Alimentos y bebidas</li>
+          <li>Gastos personales y souvenirs</li>
+          <li>Trámite de visa (si aplica)</li>
+          <li>Express Pass (se puede agregar)</li>
+          <li>Propinas y extras en hotel</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SPECIAL NOTES -->
+    <div class="notes-special-box">
+      <div class="notes-special-title">📝 Notas Especiales</div>
+      <textarea class="f" id="specialNotes" placeholder="ej. Incluye Early Park Admission · Habitación con vista al lago · Solicitud especial hecha..." rows="3" style="width:100%;min-width:unset;resize:vertical;font-size:0.82rem;line-height:1.6;"></textarea>
+    </div>
+
+    <!-- TERMS -->
+    <div class="terms-box">
+      <div class="terms-title">⚠️ Condiciones y Política de Pago</div>
+      <p>Para confirmar la reservación se requiere un depósito de <strong>$50.00 USD por persona</strong>. El saldo restante deberá liquidarse <strong>45 días</strong> antes de la fecha de llegada. Cancelaciones con menos de <strong>30 días</strong> de anticipación pueden estar sujetas a penalizaciones. Precios en dólares americanos (USD). Disponibilidad sujeta a confirmación al momento de la reservación.</p>
+    </div>
+
+  </div>
+
+  <div class="validity-strip">✦ Cotización válida por 3 días a partir de la fecha de emisión — Magia y Viaja ✦</div>
+  <div class="footer">
+    <div class="footer-brand">✦ Magia y Viaja</div>
+    <div class="footer-contact"><p>📱 WhatsApp: <span>+1 863 604 6310</span><br>Instagram: <span>@magiayviaja</span></p></div>
+  </div>
+</div>
+
+<script>
+  const indExtras = { epl: false, epu: false, photos: false, ins: false, vip: false };
+
+  function toggleExtra(type) {
+    // EP Limited and Unlimited are mutually exclusive
+    if (type === 'epl' && indExtras.epu) {
+      indExtras.epu = false;
+      document.getElementById('cb-epu').checked = false;
+      document.getElementById('opt-epu').classList.remove('selected');
+    }
+    if (type === 'epu' && indExtras.epl) {
+      indExtras.epl = false;
+      document.getElementById('cb-epl').checked = false;
+      document.getElementById('opt-epl').classList.remove('selected');
+    }
+    indExtras[type] = document.getElementById('cb-' + type).checked;
+    document.getElementById('opt-' + type).classList.toggle('selected', indExtras[type]);
+    recalc();
+  }
+
+  function val(id) { return parseFloat(document.getElementById(id).value) || 0; }
+  function fmt(n) { return '$ ' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+  function recalc() {
+    const hotel   = val('priceHotel');
+    const tickets = val('priceTickets');
+    const discount = val('discount');
+    const adults  = parseInt(document.getElementById('numAdults').value) || 0;
+    const kids    = parseInt(document.getElementById('numKids').value) || 0;
+    const pax     = adults + kids;
+
+    const eplAmt    = indExtras.epl    ? val('priceEPL') * (val('qtyEPL') || pax) : 0;
+    const epuAmt    = indExtras.epu    ? val('priceEPU') * (val('qtyEPU') || pax) : 0;
+    const photosAmt = indExtras.photos ? val('pricePhotos') : 0;
+    const insAmt    = indExtras.ins    ? val('priceIns')    : 0;
+    const vipAmt    = indExtras.vip    ? val('priceVIP')    : 0;
+
+    const total = Math.max(0, hotel + tickets + eplAmt + epuAmt + photosAmt + insAmt + vipAmt - discount);
+
+    document.getElementById('t-hotel').textContent   = fmt(hotel);
+    document.getElementById('t-tickets').textContent = fmt(tickets);
+    document.getElementById('t-epl').textContent     = fmt(eplAmt);
+    document.getElementById('t-epu').textContent     = fmt(epuAmt);
+    document.getElementById('t-photos').textContent  = fmt(photosAmt);
+    document.getElementById('t-ins').textContent = fmt(insAmt);
+    document.getElementById('t-vip').textContent = fmt(vipAmt);
+    document.getElementById('t-total').textContent   = fmt(total);
+
+    document.getElementById('row-epl').style.display    = indExtras.epl    ? '' : 'none';
+    document.getElementById('row-epu').style.display    = indExtras.epu    ? '' : 'none';
+    document.getElementById('row-photos').style.display = indExtras.photos ? '' : 'none';
+    document.getElementById('row-ins').style.display = indExtras.ins ? '' : 'none';
+    document.getElementById('row-vip').style.display = indExtras.vip ? '' : 'none';
+
+    document.getElementById('t-per-person').textContent = pax > 0 && total > 0 ? '≈ ' + fmt(total/pax) + ' por persona' : '';
+  }
+
+  // ── GENERATE CLIENT LINK ──
+  function recopilarDatos() {
+    return {
+      quoteNum:    document.getElementById('quoteNum').value,
+      quoteDate:   document.getElementById('quoteDate').value,
+      validDate:   document.getElementById('validDate').value,
+      agentName:   document.getElementById('agentName').value,
+      clientName:  document.getElementById('clientName').value,
+      clientPhone: document.getElementById('clientPhone').value,
+      numAdults:   document.getElementById('numAdults').value,
+      numKids:     document.getElementById('numKids').value,
+      kidsAges:    document.getElementById('kidsAges').value,
+      arrivalDate: document.getElementById('arrivalDate').value,
+      departDate:  document.getElementById('departDate').value,
+      duration:    document.getElementById('duration').value,
+      hotelName:   document.getElementById('hotelName').value,
+      resortCategory: document.getElementById('resortCategory').value,
+      roomType:    document.getElementById('roomType').value,
+      ticketType:  document.getElementById('ticketType').value,
+      parkDays:    document.getElementById('parkDays').value,
+      parksList:   document.getElementById('parksList').value,
+      priceHotel:  document.getElementById('priceHotel').value,
+      priceTickets:document.getElementById('priceTickets').value,
+      priceEPL:    document.getElementById('priceEPL').value,
+      qtyEPL:      document.getElementById('qtyEPL').value,
+      eplScope:    document.getElementById('eplScope').value,
+      priceEPU:    document.getElementById('priceEPU').value,
+      qtyEPU:      document.getElementById('qtyEPU').value,
+      epuScope:    document.getElementById('epuScope').value,
+      pricePhotos: document.getElementById('pricePhotos').value,
+      priceIns:    document.getElementById('priceIns').value,
+      priceVIP:    document.getElementById('priceVIP').value,
+      vipType:     document.getElementById('vipType').value,
+      vipDate:     document.getElementById('vipDate').value,
+      discount:    document.getElementById('discount').value,
+      specialNotes:document.getElementById('specialNotes').value,
+    };
+  }
+
+  let generatedUrl = '';
+  function generarClienteLink() {
+    const datos = recopilarDatos();
+    const b64   = btoa(JSON.stringify(datos));
+    const base  = window.location.href.replace('universal-quote-AGENTE.html','').replace(/\?.*$/,'');
+    generatedUrl = base + 'universal-quote-CLIENTE.html?d=' + b64;
+    document.getElementById('modal').classList.add('active');
+    document.getElementById('copyMsg').style.display = 'none';
+    document.getElementById('linkDisplay').value = generatedUrl;
+  }
+  function copiarLink() {
+    navigator.clipboard.writeText(generatedUrl).then(() => {
+      document.getElementById('copyMsg').style.display = 'block';
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = generatedUrl;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      document.getElementById('copyMsg').style.display = 'block';
+    });
+  }
+  function cerrarModal() { document.getElementById('modal').classList.remove('active'); }
+</script>
+</body>
+</html>
